@@ -1,5 +1,5 @@
-﻿# DriveLab Telem public distribution repository
+# DriveLab Telem public distribution repository
 
-This repository intentionally contains customer documentation and screenshots only.
-The proprietary Android source, signing key, license-server secrets, customer database,
-admin token, and Cloudflare credentials are not published here.
+This public repository contains the signed customer APK, product screenshots, release information, setup instructions, support documents, and customer-facing policies.
+
+The proprietary Android source code, permanent signing key, licensing server secrets, customer database, administration credentials, and Cloudflare credentials are not published here.
