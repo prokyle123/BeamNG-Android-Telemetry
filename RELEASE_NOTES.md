@@ -1,13 +1,27 @@
-﻿# DriveLab Telem 1.8.2
+# DriveLab Telem v1.8.2 — BeamNG.drive Android Telemetry Dashboard
+
+Turn an Android phone into a dedicated BeamNG.drive second screen with live telemetry, cockpit instruments, drift analysis, drag and braking tools, vehicle dynamics, achievements, and driver progression.
 
 ## Download
 
-Download `DriveLab-Telem-v1.8.2.apk` below and verify it against `DriveLab-Telem-v1.8.2.apk.sha256`.
+Download `DriveLab-Telem-v1.8.2.apk` from the release assets and verify it using `SHA256SUMS.txt`.
 
-## What is included
+## Why DriveLab Telem
+
+- Dedicated **Live Dashboard** for real-time BeamNG telemetry
+- Focused **Digital Cockpit** display
+- **Drift Lab** for tracking drift performance
+- **Drag & Brake** performance testing
+- **Vehicle Dynamics** views beyond basic speed and RPM
+- Persistent **Achievements** and **Driver Progression**
+- Full animated **Demo Mode** before activation
+- Direct use of BeamNG.drive's built-in **OutGauge** and **MotionSim** outputs
+- No PC helper application, game modification, or cloud telemetry relay
+- Local-network gameplay telemetry for a fast, private connection
+
+## Commercial package
 
 - Signed commercial Android APK
-- Full animated Demo Mode
 - Live OutGauge and MotionSim telemetry after activation
 - Purchase button connected to the publisher's checkout page
 - Two-device default license allowance
@@ -16,18 +30,18 @@ Download `DriveLab-Telem-v1.8.2.apk` below and verify it against `DriveLab-Telem
 ## Changes in 1.8.2
 
 - Incorrect activation keys now show **Invalid serial key.** instead of a technical exception or API response.
-- Online verification still runs silently at launch and when the app returns to the foreground.
+- Online verification continues to run silently at launch and when the app returns to the foreground.
 - The purchase button and self-hosted licensing workflow remain unchanged.
-- Added a polished public GitHub distribution package without exposing the commercial source code or signing credentials.
+- Added a polished public GitHub distribution package without exposing commercial source code or signing credentials.
 
-## Install
+## Quick setup
 
-1. Download the APK on the Android phone.
-2. Allow the browser or file manager to install unknown apps when Android requests it.
-3. Install and open DriveLab Telem.
-4. Try Demo Mode or enter the purchased serial key.
-
-Existing users can install this APK over the previous commercial release when it is signed by the same permanent upload key.
+1. Install and open the APK on the Android device.
+2. Put the phone and BeamNG PC on the same local network.
+3. In BeamNG.drive, open **Options → Other → Protocols**.
+4. Send **OutGauge** to the phone IP on UDP port `4444`.
+5. Send **MotionSim** to the phone IP on UDP port `4445`.
+6. Open DriveLab Telem and confirm both protocol indicators show live data.
 
 ## Integrity
 
@@ -35,6 +49,6 @@ Existing users can install this APK over the previous commercial release when it
 939172fecf6e0494fae267e355e3183ed7474ee3317ff7bd554f4f729dd4c695  DriveLab-Telem-v1.8.2.apk
 ```
 
-BeamNG.driveÂ® is a registered trademark of BeamNG GmbH. This is an independent third-party companion and is not affiliated with or endorsed by BeamNG GmbH.
+Existing customers can install this APK over a previous commercial release when it is signed by the same permanent signing key.
 
-
+**BeamNG.drive® is a registered trademark of BeamNG GmbH. DriveLab Telem is an independent third-party companion application and is not affiliated with or endorsed by BeamNG GmbH.**
