@@ -1,7 +1,7 @@
 # DriveLab Telem — BeamNG.drive Android Telemetry Dashboard
 
 <p align="center">
-  <img src="assets/feature-graphic-1024x500.png" alt="DriveLab Telem for BeamNG.drive" width="100%">
+  <img src="assets/feature-graphic-1024x500.svg" alt="DriveLab Telem for BeamNG.drive" width="100%">
 </p>
 
 <p align="center">
