@@ -44,6 +44,7 @@ DriveLab Telem connects directly to BeamNG.drive over your local network using t
 - **Achievements** - more than 1,000 goals to keep every session interesting
 - **Driver Progression** - build a persistent driving profile over time
 - **Demo Mode** - explore the interface before activating live telemetry
+- **Secure in-app updates** - check, download, verify, and install signed DriveLab updates from the Setup screen
 - **Local and responsive** - telemetry travels directly from the PC to the Android device
 - **Private by design** - gameplay telemetry stays on your network and phone
 
@@ -91,7 +92,9 @@ Read the complete [installation and telemetry setup guide](INSTALL.md).
 
 Download the newest signed `DriveLab-Telem-vX.Y.Z.apk` from **Releases**. Each release includes a SHA-256 checksum so you can verify the APK before installation.
 
-When updating, install the new APK directly over the existing version. Do not uninstall first unless troubleshooting requires it, because uninstalling removes local progression and settings.
+DriveLab Telem 1.9.2 includes secure signed in-app updates. After installing an updater-enabled release, open **Setup > App Update** to check for and install future versions.
+
+When manually updating, install the new APK directly over the existing version. Do not uninstall first unless troubleshooting requires it, because uninstalling removes local progression, achievements, settings, and saved sessions.
 
 ## Requirements
 
