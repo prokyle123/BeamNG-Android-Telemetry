@@ -1,0 +1,6 @@
+DriveLab Telem 2.1.0 GitHub release verified
+Version code: 32
+APK: DriveLab-Telem-v2.1.0.apk
+APK SHA-256: 57f610404070d6f5deee471c531962d3d02d9397f7a73a0d5c274fcad7facbf3
+Release: https://github.com/prokyle123/BeamNG-Android-Telemetry/releases/tag/v2.1.0
+Verified by workflow run: https://github.com/prokyle123/BeamNG-Android-Telemetry/actions/runs/29761811645
