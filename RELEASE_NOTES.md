@@ -45,6 +45,18 @@ RaceLink coordinates phones, timing, standings, chat, and results. It does not c
 
 Install the APK over the existing version. Do not uninstall first. Version 2.1.0 uses the same package name and permanent Android signing key, preserving activation, settings, progression, achievements, courses, sessions, and other local data.
 
+<!-- DRIVELAB RELEASE SECURITY START -->
+## Security verification
+
+- Fresh VirusTotal result: **0/74 detections**
+- Scanned UTC: `2026-07-20T18:00:34Z`
+- APK SHA-256: `57f610404070d6f5deee471c531962d3d02d9397f7a73a0d5c274fcad7facbf3`
+- [Independent scan report](https://www.virustotal.com/gui/file/57f610404070d6f5deee471c531962d3d02d9397f7a73a0d5c274fcad7facbf3/detection)
+
+The report applies only to the exact APK hash above and is a point-in-time risk check, not an absolute guarantee.
+<!-- DRIVELAB RELEASE SECURITY END -->
+
+
 ## Integrity
 
 ```text

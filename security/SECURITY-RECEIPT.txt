@@ -1,0 +1,14 @@
+DriveLab Telem APK Security Verification
+=========================================
+Version: 2.1.0 (32)
+Package: com.auroramediagroup.drivelab
+APK: DriveLab-Telem-v2.1.0.apk
+SHA-256: 57f610404070d6f5deee471c531962d3d02d9397f7a73a0d5c274fcad7facbf3
+Signing certificate SHA-256: c27df4a0e5f3cd2f99d7240a49f3ce7936340d3359420872a651e3d4fed8b82d
+VirusTotal: 0/74 detections
+Scanned UTC: 2026-07-20T18:00:34Z
+Report: https://www.virustotal.com/gui/file/57f610404070d6f5deee471c531962d3d02d9397f7a73a0d5c274fcad7facbf3/detection
+Microsoft Defender: passed
+
+No participating VirusTotal engine flagged this exact APK as malicious or suspicious at the recorded scan time.
+Malware scanning is a point-in-time risk check and cannot guarantee that any software is completely risk-free.
