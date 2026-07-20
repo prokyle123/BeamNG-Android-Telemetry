@@ -96,29 +96,19 @@ DriveLab Telem connects directly to BeamNG.drive over your local network using t
     <td width="50%" align="center"><strong>Vehicle Dynamics</strong><br><img src="screenshots/07-dynamics.png" alt="DriveLab Telem vehicle dynamics" width="100%"></td>
     <td width="50%" align="center"><strong>Guided Setup</strong><br><img src="screenshots/08-setup-demo.png" alt="DriveLab Telem setup" width="100%"></td>
   </tr>
-</table>
-
-<!-- RACELINK SCREENSHOT GALLERY START -->
-## RaceLink in action
-
-Actual DriveLab Telem 2.1.0 screenshots showing the lobby-first RaceLink workflow. The existing dashboard and lab screenshots above are preserved.
-
-<table>
+<!-- RACELINK MAIN GALLERY ROWS START -->
   <tr>
-    <td width="50%" align="center"><strong>RaceLink Online</strong><br><img src="screenshots/racelink/01-racelink-main-screen.png" alt="DriveLab Telem RaceLink online screen" width="100%"></td>
-    <td width="50%" align="center"><strong>Visible Friend Code</strong><br><img src="screenshots/racelink/02-racelink-friend-code.png" alt="DriveLab Telem large visible RaceLink friend code" width="100%"></td>
-  </tr>  <tr>
-    <td width="50%" align="center"><strong>Friends & Requests</strong><br><img src="screenshots/racelink/03-racelink-friends-list.png" alt="DriveLab Telem RaceLink friends and requests" width="100%"></td>
+    <td width="50%" align="center"><strong>RaceLink Friend Code</strong><br><img src="screenshots/racelink/02-racelink-friend-code.png" alt="DriveLab Telem large visible RaceLink friend code" width="100%"></td>
     <td width="50%" align="center"><strong>Create or Join</strong><br><img src="screenshots/racelink/04-racelink-create-room.png" alt="DriveLab Telem create or join RaceLink room" width="100%"></td>
-  </tr>  <tr>
-    <td width="50%" align="center"><strong>Lobby Before Setup</strong><br><img src="screenshots/racelink/05-racelink-empty-lobby.png" alt="DriveLab Telem empty RaceLink lobby before course setup" width="100%"></td>
-    <td width="50%" align="center"><strong>Built-in Lobby Chat</strong><br><img src="screenshots/racelink/06-racelink-lobby-chat.png" alt="DriveLab Telem RaceLink lobby chat" width="100%"></td>
-  </tr>  <tr>
-    <td width="50%" align="center"><strong>Host Race Setup</strong><br><img src="screenshots/racelink/07-racelink-race-setup.png" alt="DriveLab Telem RaceLink host course and race setup" width="100%"></td>
-    <td width="50%" align="center"><strong>Drivers Ready</strong><br><img src="screenshots/racelink/08-racelink-drivers-ready.png" alt="DriveLab Telem RaceLink drivers and ready states" width="100%"></td>
   </tr>
+  <tr>
+    <td width="50%" align="center"><strong>Lobby Chat</strong><br><img src="screenshots/racelink/06-racelink-lobby-chat.png" alt="DriveLab Telem built-in RaceLink lobby chat" width="100%"></td>
+    <td width="50%" align="center"><strong>Drivers Ready</strong><br><img src="screenshots/racelink/08-racelink-drivers-ready.png" alt="DriveLab Telem RaceLink drivers and Ready states" width="100%"></td>
+  </tr>
+<!-- RACELINK MAIN GALLERY ROWS END -->
 </table>
-<!-- RACELINK SCREENSHOT GALLERY END -->
+
+
 
 ## Start free, unlock more when ready
 
