@@ -1,0 +1,70 @@
+name: Publish DriveLab signed release
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/release-triggers/v2.1.0'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: publish-drivelab-v2.1.0
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    env:
+      VERSION: '2.1.0'
+      VERSION_CODE: '32'
+      APK_NAME: 'DriveLab-Telem-v2.1.0.apk'
+      APK_URL: 'https://license.drivelabregistration.org/v1/update/apk/DriveLab-Telem-v2.1.0.apk'
+      APK_SHA256: '57f610404070d6f5deee471c531962d3d02d9397f7a73a0d5c274fcad7facbf3'
+    steps:
+      - name: Check out customer repository
+        uses: actions/checkout@v4
+
+      - name: Download exact production APK
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail --location --retry 5 --retry-all-errors \
+            --output "$APK_NAME" "$APK_URL"
+          printf '%s  %s\n' "$APK_SHA256" "$APK_NAME" > "$APK_NAME.sha256"
+          sha256sum --check "$APK_NAME.sha256"
+
+      - name: Create or update GitHub release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          TAG="v$VERSION"
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release edit "$TAG" \
+              --title "DriveLab Telem $VERSION — RaceLink and TrackLab" \
+              --notes-file RELEASE_NOTES.md \
+              --latest
+          else
+            gh release create "$TAG" \
+              --target "$GITHUB_SHA" \
+              --title "DriveLab Telem $VERSION — RaceLink and TrackLab" \
+              --notes-file RELEASE_NOTES.md \
+              --latest
+          fi
+          gh release upload "$TAG" \
+            "$APK_NAME" \
+            "$APK_NAME.sha256" \
+            "SHA256SUMS.txt" \
+            --clobber
+
+      - name: Verify release assets
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh release view "v$VERSION" --json tagName,name,url,assets \
+            --jq '{tag: .tagName, name: .name, url: .url, assets: [.assets[].name]}'
