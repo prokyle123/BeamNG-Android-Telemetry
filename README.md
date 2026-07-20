@@ -98,6 +98,28 @@ DriveLab Telem connects directly to BeamNG.drive over your local network using t
   </tr>
 </table>
 
+<!-- RACELINK SCREENSHOT GALLERY START -->
+## RaceLink in action
+
+Actual DriveLab Telem 2.1.0 screenshots showing the lobby-first RaceLink workflow. The existing dashboard and lab screenshots above are preserved.
+
+<table>
+  <tr>
+    <td width="50%" align="center"><strong>RaceLink Online</strong><br><img src="screenshots/racelink/01-racelink-main-screen.png" alt="DriveLab Telem RaceLink online screen" width="100%"></td>
+    <td width="50%" align="center"><strong>Visible Friend Code</strong><br><img src="screenshots/racelink/02-racelink-friend-code.png" alt="DriveLab Telem large visible RaceLink friend code" width="100%"></td>
+  </tr>  <tr>
+    <td width="50%" align="center"><strong>Friends & Requests</strong><br><img src="screenshots/racelink/03-racelink-friends-list.png" alt="DriveLab Telem RaceLink friends and requests" width="100%"></td>
+    <td width="50%" align="center"><strong>Create or Join</strong><br><img src="screenshots/racelink/04-racelink-create-room.png" alt="DriveLab Telem create or join RaceLink room" width="100%"></td>
+  </tr>  <tr>
+    <td width="50%" align="center"><strong>Lobby Before Setup</strong><br><img src="screenshots/racelink/05-racelink-empty-lobby.png" alt="DriveLab Telem empty RaceLink lobby before course setup" width="100%"></td>
+    <td width="50%" align="center"><strong>Built-in Lobby Chat</strong><br><img src="screenshots/racelink/06-racelink-lobby-chat.png" alt="DriveLab Telem RaceLink lobby chat" width="100%"></td>
+  </tr>  <tr>
+    <td width="50%" align="center"><strong>Host Race Setup</strong><br><img src="screenshots/racelink/07-racelink-race-setup.png" alt="DriveLab Telem RaceLink host course and race setup" width="100%"></td>
+    <td width="50%" align="center"><strong>Drivers Ready</strong><br><img src="screenshots/racelink/08-racelink-drivers-ready.png" alt="DriveLab Telem RaceLink drivers and ready states" width="100%"></td>
+  </tr>
+</table>
+<!-- RACELINK SCREENSHOT GALLERY END -->
+
 ## Start free, unlock more when ready
 
 The signed APK starts in Free Edition without an account, email address, subscription, or activation. Full Edition is unlocked using a purchased DriveLab serial key.
