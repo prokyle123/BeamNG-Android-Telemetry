@@ -127,6 +127,22 @@ A standard Full license supports **two active Android devices** unless the purch
 
 Read the complete [installation and telemetry setup guide](INSTALL.md).
 
+<!-- DRIVELAB APK SECURITY START -->
+## APK security verification
+
+[![VirusTotal scan](https://img.shields.io/endpoint?url=https%3A%2F%2Fdrivelabregistration.org%2Fsecurity%2Fbadge.json&style=for-the-badge)](https://www.virustotal.com/gui/file/57f610404070d6f5deee471c531962d3d02d9397f7a73a0d5c274fcad7facbf3/detection)
+
+The exact signed production APK for **DriveLab Telem 2.1.0 (32)** was submitted for a fresh independent VirusTotal analysis. **0 of 74 engine results flagged it as malicious or suspicious** at `2026-07-20T18:00:34Z`.
+
+- APK SHA-256: `57f610404070d6f5deee471c531962d3d02d9397f7a73a0d5c274fcad7facbf3`
+- Permanent signing certificate SHA-256: `c27df4a0e5f3cd2f99d7240a49f3ce7936340d3359420872a651e3d4fed8b82d`
+- [View the VirusTotal report](https://www.virustotal.com/gui/file/57f610404070d6f5deee471c531962d3d02d9397f7a73a0d5c274fcad7facbf3/detection)
+- [Read the full verification and checksum instructions](SECURITY.md)
+
+This is a point-in-time scan, not an absolute guarantee. Download only from official DriveLab sources and verify the SHA-256 before manually installing.
+<!-- DRIVELAB APK SECURITY END -->
+
+
 ## Download
 
 ### [Download the latest signed DriveLab Telem APK](https://github.com/prokyle123/BeamNG-Android-Telemetry/releases/latest)
