@@ -2,27 +2,51 @@
 
 ## Is DriveLab Telem free?
 
-The APK includes a full animated Demo Mode. Live game telemetry and the complete commercial experience require a purchased serial key.
+Yes. The signed APK includes a permanent Free Edition with basic live telemetry, setup, settings, licensing controls, TrackLab access, and secure updates. Full Edition unlocks the advanced dashboards, analysis, progression, achievements, saved sessions, automatic drive tracking, RaceLink, and other premium tools.
 
-## Is payment processed inside the app?
+## Does it require a PC helper application or BeamNG mod?
 
-The Buy button starts the purchase from inside the app, but checkout opens in the phone's browser and is handled by the linked payment provider. DriveLab Telem does not collect card information.
+No. DriveLab Telem uses BeamNG.drive's built-in OutGauge and MotionSim UDP outputs.
 
-## Does it require a PC helper application or mod?
+## What is TrackLab?
 
-No. It uses BeamNG.drive® built-in OutGauge and MotionSim UDP outputs.
+TrackLab lets you record and save custom courses made from checkpoints and sectors. A saved TrackLab course can be selected and shared by a RaceLink host.
 
-## How many devices can use one license?
+## What is RaceLink?
 
-A standard license supports two active Android devices unless the purchase description states otherwise.
+RaceLink is DriveLab Telem's built-in online friend, lobby, race coordination, timing, standings, and result system. It supports private rooms for up to eight Full Edition drivers, friend codes, invitations, chat, ready checks, synchronized countdowns, live progress, sectors, standings, and final results.
 
-## Does it work offline?
+## Does RaceLink replace BeamMP?
 
-Initial activation requires internet. After activation, the signed local certificate supports offline use through its grace date. The app periodically refreshes the certificate when internet is available.
+No. RaceLink does not place cars into another driver's BeamNG world. It coordinates phones and compares drivers who are using the same map and shared TrackLab course. Drivers may use single-player sessions or any separate multiplayer arrangement they choose.
+
+## How do I add a friend?
+
+Open RaceLink, copy your permanent `DL-XXXXXX` friend code, and send it to the other driver. Enter their code in the Add Friend field and accept the request in the app.
+
+## Can drivers join before the host selects a course?
+
+Yes. The host creates the lobby first. Friends can join, chat, and prepare while the host chooses the course and race settings. Any setup change resets Ready states.
+
+## Why is Start Race disabled?
+
+The room must have a valid setup and every connected driver must be online and marked Ready. Only the host starts the synchronized countdown.
 
 ## Is gameplay telemetry uploaded?
 
-No. Gameplay telemetry stays on the local network and in app-private storage on the phone. Licensing requests contain only activation-related information described in the privacy policy.
+Normal dashboard telemetry stays on the local network and Android device. While using RaceLink, the app sends the room, identity, course, chat, readiness, timing, position/progress, sector, standings, and result data needed to run the online room. See `PRIVACY.md` for details.
+
+## How many devices can use one license?
+
+A standard Full license supports two active Android devices unless the purchase description states otherwise.
+
+## Does it work offline?
+
+Normal telemetry and locally stored features can continue offline after activation within the certificate grace period. Initial activation, license refresh, update checks, and RaceLink require internet access.
+
+## Is payment processed inside the app?
+
+The Buy button opens checkout in the phone's browser. DriveLab Telem does not collect or store card information.
 
 ## Can I transfer to a replacement phone?
 
@@ -30,8 +54,8 @@ Deactivate the old device first when possible. Contact support to reset device s
 
 ## Will an update erase progress?
 
-Installing a correctly signed update over the existing app should retain local data. Uninstalling the app removes its local data.
+A correctly signed update installed over the existing app retains local data. Uninstalling removes local app data, so do not uninstall before a normal update.
 
 ## Where is the source code?
 
-DriveLab Telem is commercial software. This public repository distributes the signed APK and customer documentation, not the proprietary source code or server credentials.
+DriveLab Telem is commercial software. This public repository distributes the signed APK and customer documentation, not proprietary Android source, permanent signing keys, license-server private keys, customer databases, or server credentials.

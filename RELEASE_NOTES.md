@@ -1,54 +1,59 @@
-# DriveLab Telem v1.8.2 — BeamNG.drive Android Telemetry Dashboard
+# DriveLab Telem 2.1.0 — RaceLink and TrackLab
 
-Turn an Android phone into a dedicated BeamNG.drive second screen with live telemetry, cockpit instruments, drift analysis, drag and braking tools, vehicle dynamics, achievements, and driver progression.
+DriveLab Telem 2.1.0 adds a complete in-app system for friends to create private rooms, coordinate a shared TrackLab course, mark Ready, run a synchronized countdown, and compare live progress and results.
 
 ## Download
 
-Download `DriveLab-Telem-v1.8.2.apk` from the release assets and verify it using `SHA256SUMS.txt`.
+Download `DriveLab-Telem-v2.1.0.apk` from the release assets and verify it using `SHA256SUMS.txt`.
 
-## Why DriveLab Telem
+## RaceLink
 
-- Dedicated **Live Dashboard** for real-time BeamNG telemetry
-- Focused **Digital Cockpit** display
-- **Drift Lab** for tracking drift performance
-- **Drag & Brake** performance testing
-- **Vehicle Dynamics** views beyond basic speed and RPM
-- Persistent **Achievements** and **Driver Progression**
-- Full animated **Demo Mode** before activation
-- Direct use of BeamNG.drive's built-in **OutGauge** and **MotionSim** outputs
-- No PC helper application, game modification, or cloud telemetry relay
-- Local-network gameplay telemetry for a fast, private connection
+- Permanent `DL-XXXXXX` friend codes with one-tap copy
+- Friend requests and direct room invitations
+- Private six-character rooms for up to eight Full Edition drivers
+- Lobby-first workflow: create and join before choosing a course
+- Built-in lobby chat
+- Host-controlled TrackLab course and race configuration
+- Circuit, point-to-point, and timed best-lap modes
+- Ready checks that reset whenever setup changes
+- Host-controlled synchronized eight-second countdown
+- Live online state, driver positions, progress, sectors, laps, standings, and results
 
-## Commercial package
+## TrackLab
 
-- Signed commercial Android APK
-- Live OutGauge and MotionSim telemetry after activation
-- Purchase button connected to the publisher's checkout page
-- Two-device default license allowance
-- Offline grace access after successful activation
+- Record and save reusable checkpoint courses
+- Refined course setup and human-readable race information
+- Shared temporary course configuration through RaceLink rooms
+- Same-map and same-course comparison between drivers
 
-## Changes in 1.8.2
+## Existing DriveLab features
 
-- Incorrect activation keys now show **Invalid serial key.** instead of a technical exception or API response.
-- Online verification continues to run silently at launch and when the app returns to the foreground.
-- The purchase button and self-hosted licensing workflow remain unchanged.
-- Added a polished public GitHub distribution package without exposing commercial source code or signing credentials.
+- Live OutGauge and MotionSim dashboard
+- Digital Cockpit
+- Drift, drag, brake, dynamics, coach, damage, and analysis tools
+- More than 1,000 achievements
+- Persistent driver progression
+- Automatic drive summaries and saved sessions
+- Free and Full Editions in one signed APK
+- Signed self-hosted in-app update system
 
-## Quick setup
+## Important RaceLink behavior
 
-1. Install and open the APK on the Android device.
-2. Put the phone and BeamNG PC on the same local network.
-3. In BeamNG.drive, open **Options → Other → Protocols**.
-4. Send **OutGauge** to the phone IP on UDP port `4444`.
-5. Send **MotionSim** to the phone IP on UDP port `4445`.
-6. Open DriveLab Telem and confirm both protocol indicators show live data.
+RaceLink coordinates phones, timing, standings, chat, and results. It does not create a BeamMP server or place vehicles into the same BeamNG world. Drivers should use the same BeamNG map and shared TrackLab course.
+
+## Updating
+
+Install the APK over the existing version. Do not uninstall first. Version 2.1.0 uses the same package name and permanent Android signing key, preserving activation, settings, progression, achievements, courses, sessions, and other local data.
 
 ## Integrity
 
 ```text
-939172fecf6e0494fae267e355e3183ed7474ee3317ff7bd554f4f729dd4c695  DriveLab-Telem-v1.8.2.apk
+57f610404070d6f5deee471c531962d3d02d9397f7a73a0d5c274fcad7facbf3  DriveLab-Telem-v2.1.0.apk
 ```
 
-Existing customers can install this APK over a previous commercial release when it is signed by the same permanent signing key.
+**Package:** `com.auroramediagroup.drivelab`  
+**Version name:** `2.1.0`  
+**Version code:** `32`  
+**Minimum Android:** 8.0 / API 26
 
-**BeamNG.drive® is a registered trademark of BeamNG GmbH. DriveLab Telem is an independent third-party companion application and is not affiliated with or endorsed by BeamNG GmbH.**
+**BeamNG.drive is a trademark of BeamNG GmbH. DriveLab Telem is an independent third-party companion application and is not affiliated with or endorsed by BeamNG GmbH.**

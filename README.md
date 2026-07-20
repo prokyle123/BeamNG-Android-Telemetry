@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-  <strong>Turn your Android phone or tablet into a dedicated BeamNG.drive dashboard, digital cockpit, drift analyzer, performance timer, and driver progression display.</strong>
+  <strong>Turn an Android phone or tablet into a dedicated BeamNG.drive dashboard, TrackLab course tool, and RaceLink multiplayer race companion.</strong>
 </p>
 
 <p align="center">
@@ -16,9 +16,7 @@
 </p>
 
 <p align="center">
-  <a href="https://drivelabregistration.org"><strong>OFFICIAL PRODUCT PAGE</strong></a>
-  &nbsp; | &nbsp;
-  <a href="https://drivelabregistration.org/download/latest"><strong>DOWNLOAD THE LATEST APK</strong></a>
+  <a href="https://github.com/prokyle123/BeamNG-Android-Telemetry/releases/latest"><strong>DOWNLOAD THE LATEST APK</strong></a>
   &nbsp; | &nbsp;
   <a href="https://drivelabregistration.org/go/buy"><strong>GET FULL EDITION</strong></a>
   &nbsp; | &nbsp;
@@ -31,9 +29,29 @@
 
 ---
 
-## Official website
+## DriveLab Telem 2.1.0
 
-Visit **[drivelabregistration.org](https://drivelabregistration.org)** for the full product page, Free-versus-Full comparison, setup instructions, support information, the latest signed APK, and Full Edition checkout.
+Version **2.1.0 (32)** introduces **RaceLink**, the new Full Edition online racing and comparison system, alongside the refined **TrackLab** course workflow.
+
+### RaceLink
+
+- Add friends using permanent `DL-XXXXXX` friend codes
+- Send and accept friend requests inside the app
+- Create private six-character RaceLink rooms before selecting a course
+- Join by room code or direct friend invitation
+- Built-in lobby chat
+- Host-selected TrackLab course and race configuration
+- Circuit, point-to-point, and timed best-lap modes
+- Ready checks that automatically reset whenever the host changes setup
+- Host-controlled synchronized eight-second countdown
+- Live driver positions, connection state, progress, sectors, standings, and final results
+- Up to eight Full Edition drivers per room
+
+RaceLink coordinates phones, course data, timing, standings, and results. It does **not** place vehicles into another player's BeamNG world. Drivers should use the same BeamNG map and the same shared TrackLab course for meaningful comparison.
+
+### TrackLab
+
+TrackLab lets drivers build reusable courses from recorded checkpoints, choose start/finish behavior, configure sectors, save courses locally, and share the selected course through a RaceLink lobby.
 
 ## Put your telemetry where it belongs
 
@@ -41,22 +59,23 @@ Stop covering the game with extra HUD windows. Mount an Android phone beside you
 
 DriveLab Telem connects directly to BeamNG.drive over your local network using the game's built-in **OutGauge** and **MotionSim** UDP outputs.
 
-**No PC helper program. No BeamNG mod. No cloud telemetry relay.**
+**No PC helper program and no BeamNG mod are required.** Normal dashboard telemetry stays between the BeamNG PC and Android device. RaceLink network data is sent only while the driver uses RaceLink features.
 
-## More than a speedometer
+## Major features
 
-- **Live Dashboard** - real-time speed, RPM, gear, temperatures, fuel, forces, and driving data
-- **Digital Cockpit** - a focused instrument cluster for normal driving and racing
-- **Drift Lab** - analyze drift angle, performance, and session results
-- **Drag and Brake Testing** - measure acceleration runs and braking performance
-- **Vehicle Dynamics** - view motion and handling data beyond basic gauges
-- **Achievements** - more than 1,000 goals to keep every session interesting
-- **Driver Progression** - build a persistent driving profile over time
-- **Free Edition** - basic live telemetry, setup, settings, licensing, and secure updates without an account
-- **Full Edition** - Cockpit, Race Labs, Analyze, automatic drive tracking, progression, achievements, saved sessions, crash history, advanced graphs, exports, and layout customization
-- **Secure in-app updates** - check, download, verify, and install signed DriveLab updates from the Setup screen
-- **Local and responsive** - telemetry travels directly from the PC to the Android device
-- **Private by design** - gameplay telemetry stays on your network and phone
+- **Live Dashboard** — real-time speed, RPM, gear, temperatures, fuel, forces, and driving data
+- **Digital Cockpit** — focused instrument cluster for normal driving and racing
+- **TrackLab** — create, save, refine, and share custom courses
+- **RaceLink** — friends, rooms, invites, chat, ready checks, countdowns, live standings, and results
+- **Drift Lab** — drift angle, scoring, performance, and session results
+- **Drag and Brake Testing** — acceleration runs and braking performance
+- **Vehicle Dynamics** — motion and handling data beyond basic gauges
+- **Achievements** — more than 1,000 goals
+- **Driver Progression** — persistent local driving profile
+- **Automatic drive tracking** — completed-drive summaries and comparisons
+- **Secure in-app updates** — signed manifests, SHA-256 verification, package checks, and permanent signing-certificate verification
+- **Free Edition** — basic live telemetry, setup, settings, licensing, TrackLab access, and secure updates
+- **Full Edition** — Cockpit, advanced labs, Analyze, RaceLink, automatic drive tracking, progression, achievements, saved sessions, crash history, advanced graphs, exports, and layout customization
 
 ## See DriveLab Telem in action
 
@@ -81,13 +100,11 @@ DriveLab Telem connects directly to BeamNG.drive over your local network using t
 
 ## Start free, unlock more when ready
 
-The signed APK works immediately in Free Edition with no account, serial key, or server connection required. Free Edition includes basic Live telemetry, BeamNG connection setup, settings, licensing controls, and secure updates.
+The signed APK starts in Free Edition without an account, email address, subscription, or activation. Full Edition is unlocked using a purchased DriveLab serial key.
 
-Full Edition unlocks Cockpit, Race Labs, Analyze, automatic drive tracking, progression, achievements, saved sessions, crash history, advanced graphs, exports, and dashboard customization.
+A standard Full license supports **two active Android devices** unless the purchase listing states otherwise. RaceLink requires Full Edition on every participating device.
 
-A standard Full license supports **two active Android devices** unless the purchase listing states otherwise. The in-app Buy button opens the secure external checkout page in your browser. DriveLab Telem does not collect card information.
-
-## Setup takes only a few minutes
+## Quick setup
 
 1. Install the signed APK on the Android device.
 2. Connect the Android device and BeamNG PC to the same network.
@@ -98,35 +115,34 @@ A standard Full license supports **two active Android devices** unless the purch
 
 Read the complete [installation and telemetry setup guide](INSTALL.md).
 
-<img width="858" height="377" alt="image" src="https://github.com/user-attachments/assets/0fc5bd10-6c64-44e8-ab4f-a40597b62fa2" />
-
-
 ## Download
 
-### [Download the latest signed DriveLab Telem APK](https://drivelabregistration.org/download/latest)
+### [Download the latest signed DriveLab Telem APK](https://github.com/prokyle123/BeamNG-Android-Telemetry/releases/latest)
 
-The official website always points to the current production APK published by DriveLab's signed update system. The [GitHub Releases page](https://github.com/prokyle123/BeamNG-Android-Telemetry/releases/latest) remains available as a public mirror.
+Current production release: **DriveLab Telem 2.1.0 (32)**.
 
-DriveLab Telem 1.10.0 includes secure signed in-app updates. Open **Setup > App Update** to check for and install future versions.
+When manually updating, install the new APK directly over the existing version. **Do not uninstall first**, because uninstalling removes local progression, achievements, settings, courses, sessions, and the stored activation.
 
-When manually updating, install the new APK directly over the existing version. Do not uninstall first unless troubleshooting requires it, because uninstalling removes local progression, achievements, settings, and saved sessions.
+The APK is also distributed by DriveLab's signed in-app update system. Open **Setup > App Update** to check, download, verify, and install future releases.
 
 ## Requirements
 
-- Android phone or tablet
+- Android 8.0 or newer
 - BeamNG.drive on a Windows PC
-- Phone and PC on the same local network
-- BeamNG OutGauge and MotionSim protocols enabled
+- Phone and PC on the same local network for game telemetry
+- BeamNG OutGauge and MotionSim enabled
+- Internet access for activation, updates, and RaceLink
+- Full Edition for RaceLink
 
 ## Privacy and ownership
 
-Gameplay telemetry is sent locally from BeamNG.drive to the Android device. It is not uploaded during normal telemetry operation. Licensing requests contain only the activation-related information described in the [privacy policy](PRIVACY.md).
+Normal BeamNG telemetry is sent locally from the PC to the Android device. When RaceLink is used, the app sends the minimum room, identity, course, timing, position/progress, chat, readiness, and result data needed to operate that online feature. See the [privacy policy](PRIVACY.md) for details.
 
-DriveLab Telem is commercial software. This repository distributes the signed customer APK and documentation. It does not publish proprietary source code, Android signing keys, or licensing server credentials.
+DriveLab Telem is commercial software. This repository distributes the signed customer APK and documentation. It does not publish proprietary Android source code, permanent signing keys, license-server private keys, customer databases, or server credentials.
 
 ## Support
 
-Visit the **[official DriveLab Telem website](https://drivelabregistration.org)**, then check the [setup guide](INSTALL.md) and [FAQ](FAQ.md). For support, email **auroramediagroup1@gmail.com** with the app version, Android device, BeamNG setup, connection status, and a screenshot that does not expose a serial key or other sensitive information.
+Visit the **[official DriveLab Telem website](https://drivelabregistration.org)**, then check the [setup guide](INSTALL.md) and [FAQ](FAQ.md). For support, email **auroramediagroup1@gmail.com** with the app version, Android device, BeamNG setup, connection status, and a screenshot that does not expose a serial key, admin token, or other sensitive information.
 
 ---
 
