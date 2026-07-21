@@ -155,8 +155,10 @@ function Update-CoDriverSource([string[]]$Files) {
             $context = ($lines[$from..$to] -join " ")
             $oldLine = $lines[$i]
             $newLine = $oldLine
+            $runtimeLineChanged = $false
 
             if ($context -match '(?i)(free|trial|preview|limit|remaining|edition|unlock|full)') {
+                $beforeRuntime = $newLine
                 $newLine = $newLine.Replace('60_000L', '30_000L')
                 $newLine = $newLine.Replace('60_000', '30_000')
                 $newLine = $newLine.Replace('60000L', '30000L')
@@ -168,12 +170,19 @@ function Update-CoDriverSource([string[]]$Files) {
                 $newLine = [regex]::Replace($newLine, '(?<!\d)60\.seconds(?!\w)', '30.seconds')
 
                 if (
-                    $newLine -match '(?i)(seconds?|duration|trial|preview|limit|remaining|free)' -or
-                    $newLine.Trim() -match '^60(?:L|f)?[,;]?$'
+                    $newLine -notmatch '["'']' -and
+                    (
+                        $newLine -match '(?i)(seconds?|duration|trial|preview|limit|remaining|free)' -or
+                        $newLine.Trim() -match '^60(?:L|f)?[,;]?$'
+                    )
                 ) {
                     $newLine = [regex]::Replace($newLine, '(?<![\d.])60L(?!\w)', '30L')
                     $newLine = [regex]::Replace($newLine, '(?<![\d.])60f(?!\w)', '30f')
                     $newLine = [regex]::Replace($newLine, '(?<![\d.])60(?![\d.]|\s*[-–]\s*0|\.sp|\.dp)', '30')
+                }
+
+                if ($newLine -ne $beforeRuntime -and $oldLine -notmatch '["'']') {
+                    $runtimeLineChanged = $true
                 }
             }
 
@@ -184,9 +193,8 @@ function Update-CoDriverSource([string[]]$Files) {
             }
 
             if ($newLine -ne $oldLine) {
-                $numericChanged = $oldLine -match '(60_000|60000|Duration\.ofSeconds|TimeUnit\.SECONDS|60\.0|60\.seconds|\b60L\b|\b60f\b|\b60\b)'
-                if ($numericChanged) { $runtimeChanges++ } else { $displayChanges++ }
-                $changeReport.Add("$file:$($i + 1): $($oldLine.Trim())  ->  $($newLine.Trim())") | Out-Null
+                if ($runtimeLineChanged) { $runtimeChanges++ } else { $displayChanges++ }
+                $changeReport.Add("${file}:$($i + 1): $($oldLine.Trim())  ->  $($newLine.Trim())") | Out-Null
                 $lines[$i] = $newLine
                 $changed = $true
             }
@@ -199,7 +207,7 @@ function Update-CoDriverSource([string[]]$Files) {
 
     if ($runtimeChanges -lt 1) {
         $names = ($Files | ForEach-Object { $_ }) -join "`r`n"
-        throw "The Auto Co-Driver files were found, but the 60-second Free limit could not be identified safely. No source was changed.`r`n$names"
+        throw "The Auto Co-Driver files were found, but the runtime 60-second Free limit could not be identified safely. No source was changed.`r`n$names"
     }
 
     return [pscustomobject]@{
@@ -230,7 +238,9 @@ try {
 
     $sourceRoots = @(
         (Join-Path $ProjectRoot "app\src\main\java"),
-        (Join-Path $ProjectRoot "app\src\test\java")
+        (Join-Path $ProjectRoot "app\src\main\kotlin"),
+        (Join-Path $ProjectRoot "app\src\test\java"),
+        (Join-Path $ProjectRoot "app\src\test\kotlin")
     ) | Where-Object { Test-Path $_ }
 
     $allKotlin = @($sourceRoots | ForEach-Object {
@@ -258,6 +268,9 @@ try {
     $NewGradleText = Replace-FirstLiteral $NewGradleText "versionName = `"$ExpectedVersion`"" "versionName = `"$TargetVersion`"" "versionName"
 
     $UpdateUiPath = Join-Path $ProjectRoot "app\src\main\java\com\auroramediagroup\drivelab\UpdateUi.kt"
+    if (-not (Test-Path $UpdateUiPath)) {
+        $UpdateUiPath = Join-Path $ProjectRoot "app\src\main\kotlin\com\auroramediagroup\drivelab\UpdateUi.kt"
+    }
     if (-not (Test-Path $UpdateUiPath)) { throw "UpdateUi.kt was not found." }
     $UpdateUiText = Read-Text $UpdateUiPath
     if ($UpdateUiText.Contains("version = `"$TargetVersion`"")) {
@@ -294,7 +307,7 @@ private val ReleaseHistory = listOf(
 - Preserved licenses, settings, TrackLab courses, pace notes, progression, sessions, and Android signing compatibility.
 
 '@
-    $NewChangelogText = $changelogEntry + $ChangelogText.Substring($heading.Length).TrimStart("`r", "`n")
+    $NewChangelogText = $changelogEntry + $ChangelogText.Substring($heading.Length).TrimStart([char[]]"`r`n")
 
     $ReleaseNotesPath = Join-Path $ProjectRoot "UPDATE-RELEASE-NOTES.txt"
     $NewReleaseNotes = @'
@@ -334,6 +347,7 @@ DriveLab Telem 2.2.2
     if ($auditGradle -notmatch ("versionCode\s*=\s*" + $newCode)) { throw "Version-code validation failed." }
 
     $reportPath = Join-Path $ProjectRoot "DRIVELAB-2.2.2-PATCH-REPORT.txt"
+    if (-not (Test-Path $reportPath)) { $CreatedFiles.Add($reportPath) | Out-Null }
     $reportText = @(
         "DriveLab 2.2.2 Auto Co-Driver Free Preview Patch",
         "Project: $ProjectRoot",
@@ -389,8 +403,11 @@ DriveLab Telem 2.2.2
         if ($deviceLines.Count -eq 1) {
             Write-Host "Installing the signed 2.2.2 test APK on the connected Android device..." -ForegroundColor Cyan
             & $adb install -r $customerApk
-            if ($LASTEXITCODE -ne 0) { throw "The signed APK built correctly but could not be installed on the connected device." }
-            $installed = $true
+            if ($LASTEXITCODE -eq 0) {
+                $installed = $true
+            } else {
+                Write-Host "The APK built and verified, but automatic phone installation failed. Install it manually from release-output." -ForegroundColor Yellow
+            }
         } elseif ($deviceLines.Count -gt 1) {
             Write-Host "Multiple Android devices are connected, so automatic installation was skipped." -ForegroundColor Yellow
         } else {
@@ -399,6 +416,7 @@ DriveLab Telem 2.2.2
     }
 
     $checklistPath = Join-Path $ProjectRoot "DRIVELAB-2.2.2-TEST-CHECKLIST.txt"
+    if (-not (Test-Path $checklistPath)) { $CreatedFiles.Add($checklistPath) | Out-Null }
     $checklist = @'
 DRIVELAB 2.2.2 TEST CHECKLIST
 
@@ -425,7 +443,7 @@ GENERAL
 '@
     Write-Text $checklistPath $checklist
 
-    Write-Host "" 
+    Write-Host ""
     Write-Host "DRIVELAB 2.2.2 TEST BUILD PASSED" -ForegroundColor Green
     Write-Host "APK: $customerApk" -ForegroundColor Cyan
     Write-Host "SHA-256: $sha256" -ForegroundColor Cyan
@@ -435,7 +453,7 @@ GENERAL
     exit 0
 }
 catch {
-    Write-Host "" 
+    Write-Host ""
     Write-Host "ERROR: $($_.Exception.Message)" -ForegroundColor Red
     try { Restore-Backup } catch { Write-Host "Rollback warning: $($_.Exception.Message)" -ForegroundColor Red }
     Write-Host "Nothing was published." -ForegroundColor Yellow
