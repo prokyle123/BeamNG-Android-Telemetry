@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-  <strong>Turn an Android phone or tablet into a dedicated BeamNG.drive dashboard, TrackLab course tool, and RaceLink multiplayer race companion.</strong>
+  <strong>Turn an Android phone or tablet into a dedicated BeamNG.drive dashboard, TrackLab course tool, Auto Co-Driver, and RaceLink multiplayer race companion.</strong>
 </p>
 
 <p align="center">
@@ -29,9 +29,27 @@
 
 ---
 
-## DriveLab Telem 2.1.0
+## DriveLab Telem 2.3.0
 
-Version **2.1.0 (32)** introduces **RaceLink**, the new Full Edition online racing and comparison system, alongside the refined **TrackLab** course workflow.
+Version **2.3.0 (35)** rebuilds the Achievement Vault, strengthens Auto Co-Driver, and adds numbered pace-note markers directly to the TrackLab course map.
+
+### Achievement Vault rebuilt
+
+- **1,001 distinct challenges** instead of repetitive next-speed tiers
+- Secret, legendary, insane, multi-condition, endurance, control, impact, off-road, drift, launch, braking, and long-term progression goals
+- Existing tier-based unlocks preserved as a **Legacy Vault** record
+- XP, levels, personal records, statistics, courses, laps, sessions, and saved data remain intact
+- One continuous scrolling page keeps the complete vault usable on phones
+
+### Auto Co-Driver and TrackLab tuning
+
+- More reliable spoken calls throughout a TrackLab run
+- Looser corner and braking detection with route-noise suppression retained
+- Adaptive Early, Normal, and Late timing
+- Automatic **Jump**, **Big Jump**, and **Quick Dip** pace notes
+- Numbered callout markers on the black TrackLab map
+- Matching numbered map legend and pace-note review list
+- Live car marker remains contained inside the course map after resets, teleports, or vehicle reloads
 
 ### RaceLink
 
@@ -42,16 +60,11 @@ Version **2.1.0 (32)** introduces **RaceLink**, the new Full Edition online raci
 - Built-in lobby chat
 - Host-selected TrackLab course and race configuration
 - Circuit, point-to-point, and timed best-lap modes
-- Ready checks that automatically reset whenever the host changes setup
-- Host-controlled synchronized eight-second countdown
+- Ready checks and a synchronized eight-second countdown
 - Live driver positions, connection state, progress, sectors, standings, and final results
 - Up to eight Full Edition drivers per room
 
 RaceLink coordinates phones, course data, timing, standings, and results. It does **not** place vehicles into another player's BeamNG world. Drivers should use the same BeamNG map and the same shared TrackLab course for meaningful comparison.
-
-### TrackLab
-
-TrackLab lets drivers build reusable courses from recorded checkpoints, choose start/finish behavior, configure sectors, save courses locally, and share the selected course through a RaceLink lobby.
 
 ## Put your telemetry where it belongs
 
@@ -65,17 +78,18 @@ DriveLab Telem connects directly to BeamNG.drive over your local network using t
 
 - **Live Dashboard** — real-time speed, RPM, gear, temperatures, fuel, forces, and driving data
 - **Digital Cockpit** — focused instrument cluster for normal driving and racing
-- **TrackLab** — create, save, refine, and share custom courses
+- **TrackLab** — record, save, time, map, and compare circuits, roads, hill climbs, and point-to-point stages
+- **Auto Co-Driver** — locally generated spoken corners, braking, crests, dips, jumps, timing, numbered callouts, and editable pace notes
 - **RaceLink** — friends, rooms, invites, chat, ready checks, countdowns, live standings, and results
 - **Drift Lab** — drift angle, scoring, performance, and session results
 - **Drag and Brake Testing** — acceleration runs and braking performance
 - **Vehicle Dynamics** — motion and handling data beyond basic gauges
-- **Achievements** — more than 1,000 goals
+- **Achievement Vault** — 1,001 distinct driving challenges with secret and high-difficulty goals
 - **Driver Progression** — persistent local driving profile
 - **Automatic drive tracking** — completed-drive summaries and comparisons
 - **Secure in-app updates** — signed manifests, SHA-256 verification, package checks, and permanent signing-certificate verification
 - **Free Edition** — basic live telemetry, setup, settings, licensing, TrackLab access, and secure updates
-- **Full Edition** — Cockpit, advanced labs, Analyze, RaceLink, automatic drive tracking, progression, achievements, saved sessions, crash history, advanced graphs, exports, and layout customization
+- **Full Edition** — Cockpit, advanced labs, Analyze, unlimited TrackLab, Auto Co-Driver, RaceLink, automatic drive tracking, progression, achievements, saved sessions, crash history, advanced graphs, exports, and layout customization
 
 ## See DriveLab Telem in action
 
@@ -108,8 +122,6 @@ DriveLab Telem connects directly to BeamNG.drive over your local network using t
 <!-- RACELINK MAIN GALLERY ROWS END -->
 </table>
 
-
-
 ## Start free, unlock more when ready
 
 The signed APK starts in Free Edition without an account, email address, subscription, or activation. Full Edition is unlocked using a purchased DriveLab serial key.
@@ -132,9 +144,9 @@ Read the complete [installation and telemetry setup guide](INSTALL.md).
 
 [![VirusTotal scan](https://img.shields.io/endpoint?url=https%3A%2F%2Fdrivelabregistration.org%2Fsecurity%2Fbadge.json&style=for-the-badge)](https://www.virustotal.com/gui/file/57f610404070d6f5deee471c531962d3d02d9397f7a73a0d5c274fcad7facbf3/detection)
 
-The exact signed production APK for **DriveLab Telem 2.1.0 (32)** was submitted for a fresh independent VirusTotal analysis. **0 of 74 engine results flagged it as malicious or suspicious** at `2026-07-20T18:00:34Z`.
+The last independently submitted production APK was **DriveLab Telem 2.1.0 (32)**. **0 of 74 engine results flagged it as malicious or suspicious** at `2026-07-20T18:00:34Z`.
 
-- APK SHA-256: `57f610404070d6f5deee471c531962d3d02d9397f7a73a0d5c274fcad7facbf3`
+- Scanned APK SHA-256: `57f610404070d6f5deee471c531962d3d02d9397f7a73a0d5c274fcad7facbf3`
 - Permanent signing certificate SHA-256: `c27df4a0e5f3cd2f99d7240a49f3ce7936340d3359420872a651e3d4fed8b82d`
 - [View the VirusTotal report](https://www.virustotal.com/gui/file/57f610404070d6f5deee471c531962d3d02d9397f7a73a0d5c274fcad7facbf3/detection)
 - [Read the full verification and checksum instructions](SECURITY.md)
@@ -142,12 +154,11 @@ The exact signed production APK for **DriveLab Telem 2.1.0 (32)** was submitted 
 This is a point-in-time scan, not an absolute guarantee. Download only from official DriveLab sources and verify the SHA-256 before manually installing.
 <!-- DRIVELAB APK SECURITY END -->
 
-
 ## Download
 
 ### [Download the latest signed DriveLab Telem APK](https://github.com/prokyle123/BeamNG-Android-Telemetry/releases/latest)
 
-Current production release: **DriveLab Telem 2.1.0 (32)**.
+Current production release: **DriveLab Telem 2.3.0 (35)**.
 
 When manually updating, install the new APK directly over the existing version. **Do not uninstall first**, because uninstalling removes local progression, achievements, settings, courses, sessions, and the stored activation.
 
@@ -160,11 +171,11 @@ The APK is also distributed by DriveLab's signed in-app update system. Open **Se
 - Phone and PC on the same local network for game telemetry
 - BeamNG OutGauge and MotionSim enabled
 - Internet access for activation, updates, and RaceLink
-- Full Edition for RaceLink
+- Full Edition for RaceLink and unlimited Auto Co-Driver use
 
 ## Privacy and ownership
 
-Normal BeamNG telemetry is sent locally from the PC to the Android device. When RaceLink is used, the app sends the minimum room, identity, course, timing, position/progress, chat, readiness, and result data needed to operate that online feature. See the [privacy policy](PRIVACY.md) for details.
+Normal BeamNG telemetry is sent locally from the PC to the Android device. Auto Co-Driver route analysis and pace-note generation remain local to the Android device. When RaceLink is used, the app sends the minimum room, identity, course, timing, position/progress, chat, readiness, and result data needed to operate that online feature. See the [privacy policy](PRIVACY.md) for details.
 
 DriveLab Telem is commercial software. This repository distributes the signed customer APK and documentation. It does not publish proprietary Android source code, permanent signing keys, license-server private keys, customer databases, or server credentials.
 
