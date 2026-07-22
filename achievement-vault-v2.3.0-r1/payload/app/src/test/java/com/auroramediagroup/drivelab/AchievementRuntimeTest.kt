@@ -37,7 +37,7 @@ class AchievementRuntimeTest {
     }
 
     @Test
-    fun driftDurationUsesPacketTimeAndDirection() {
+    fun fullThrottleAndNoBrakeStreaksUseLivePacketTime() {
         val runtime = AchievementRuntime()
         runtime.sync(DriverProgress(), AnalyzerState())
 
@@ -45,24 +45,15 @@ class AchievementRuntimeTest {
             runtime.update(
                 frame = TelemetryFrame(
                     outGauge = OutGaugeData(
+                        gearRaw = 3,
                         speedMps = 20.0,
-                        throttle = 0.70,
+                        rpm = 5_000.0,
+                        throttle = 0.98,
+                        brake = 0.0,
                         receivedAtMs = 1_000L + index * 500L
-                    ),
-                    motionDerived = MotionDerivedData(
-                        driftAngleDeg = -25.0,
-                        totalG = 1.0
                     )
                 ),
-                analyzer = AnalyzerState(
-                    drift = DriftMetrics(
-                        active = true,
-                        currentAngleDeg = 25.0,
-                        maxAngleDeg = 25.0,
-                        durationSeconds = index * 0.5,
-                        score = index * 500
-                    )
-                ),
+                analyzer = AnalyzerState(),
                 dtSeconds = 0.5,
                 redlineRpm = 7_000,
                 driveActive = true
@@ -70,8 +61,8 @@ class AchievementRuntimeTest {
         }
 
         val stats = runtime.snapshot()
-        assertTrue((stats[AchievementMetric.BEST_DRIFT_DURATION.name] ?: 0.0) >= 5.5)
-        assertTrue((stats[AchievementMetric.LONGEST_LEFT_DRIFT_SECONDS.name] ?: 0.0) >= 5.5)
+        assertTrue((stats[AchievementMetric.LONGEST_FULL_THROTTLE_SECONDS.name] ?: 0.0) >= 5.5)
+        assertTrue((stats[AchievementMetric.LONGEST_NO_BRAKE_SECONDS.name] ?: 0.0) >= 5.5)
     }
 
     @Test
