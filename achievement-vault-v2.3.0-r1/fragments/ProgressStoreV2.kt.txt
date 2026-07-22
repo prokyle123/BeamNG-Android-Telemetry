@@ -1,0 +1,201 @@
+class ProgressStore(context: Context) {
+    private val preferences = context.getSharedPreferences("drivelab_progress", Context.MODE_PRIVATE)
+
+    companion object {
+        private const val SCHEMA_VERSION = 4
+        private const val ACHIEVEMENT_CATALOG_VERSION = 2
+    }
+
+    init {
+        val storedSchema = preferences.getInt("schemaVersion", 1)
+        val storedCatalog = preferences.getInt("achievementCatalogVersion", 1)
+        if (storedSchema < SCHEMA_VERSION || storedCatalog < ACHIEVEMENT_CATALOG_VERSION) {
+            val oldUnlocked = preferences.getStringSet("achievements", emptySet())?.size ?: 0
+            val existingLegacy = preferences.getInt("legacyAchievementCount", 0)
+            preferences.edit()
+                .putInt("schemaVersion", SCHEMA_VERSION)
+                .putInt("achievementCatalogVersion", ACHIEVEMENT_CATALOG_VERSION)
+                .putInt("legacyAchievementCount", maxOf(existingLegacy, oldUnlocked))
+                .putStringSet("achievements", emptySet())
+                .putString("achievementStats", "{}")
+                .putBoolean("needsAchievementRebuild", false)
+                .apply()
+        }
+    }
+
+    fun load(): DriverProgress = DriverProgress(
+        totalXp = preferences.getLong("totalXp", 0L),
+        speedXp = preferences.getLong("speedXp", 0L),
+        driftXp = preferences.getLong("driftXp", 0L),
+        controlXp = preferences.getLong("controlXp", 0L),
+        enduranceXp = preferences.getLong("enduranceXp", 0L),
+        sessionsCompleted = preferences.getInt("sessionsCompleted", 0),
+        totalDistanceMeters = preferences.getStoredDouble("totalDistanceMeters", 0.0),
+        totalDriveSeconds = preferences.getStoredDouble("totalDriveSeconds", 0.0),
+        topSpeedMph = preferences.getStoredDouble("topSpeedMph", 0.0),
+        bestDriftScore = preferences.getInt("bestDriftScore", 0),
+        bestDriftAngleDeg = preferences.getStoredDouble("bestDriftAngleDeg", 0.0),
+        cleanSessions = preferences.getInt("cleanSessions", 0),
+        totalShifts = preferences.getInt("totalShifts", 0),
+        quarterMileRuns = preferences.getInt("quarterMileRuns", 0),
+        brakeRuns = preferences.getInt("brakeRuns", 0),
+        totalCrashes = preferences.getInt("totalCrashes", 0),
+        legacyAchievementCount = preferences.getInt("legacyAchievementCount", 0),
+        achievementStats = decodeAchievementStats(preferences.getString("achievementStats", null)),
+        achievements = preferences.getStringSet("achievements", emptySet())?.toSet() ?: emptySet()
+    )
+
+    @Synchronized
+    fun award(session: SessionSummary): Pair<DriverProgress, XpAward?> {
+        val processed = preferences.getStringSet("processedSessionIds", emptySet())?.toMutableSet() ?: mutableSetOf()
+        if (!processed.add(session.id)) return load() to null
+
+        val speed = (session.maxSpeedMph * 0.8).toInt().coerceIn(0, 180) +
+            (if (session.zeroTo60 != null) 75 else 0) +
+            (if (session.quarterMile != null) 140 else 0) +
+            ((session.quarterTrapMph ?: 0.0) * 0.35).toInt().coerceAtMost(70)
+        val drift = (session.driftScore / 18).coerceIn(0, 450) +
+            (session.maxDriftAngleDeg * 2.2).toInt().coerceIn(0, 180)
+        val control = session.shiftScore.coerceIn(0, 100) +
+            (100 - session.abuseScore).coerceIn(0, 100) +
+            (if (session.crashCount == 0 && session.durationSeconds >= 45.0) 60 else 0) +
+            (if (session.sixtyToZeroSeconds != null || session.hundredToZeroSeconds != null) 45 else 0)
+        val endurance = (session.durationSeconds / 4.0).toInt().coerceIn(0, 240) +
+            (session.distanceMeters / 120.0).toInt().coerceIn(0, 220)
+        val total = speed + drift + control + endurance
+
+        val old = load()
+        val cleanSession = session.crashCount == 0 && session.abuseScore <= 25 && session.durationSeconds >= 45.0
+        val updatedWithoutAchievements = old.copy(
+            totalXp = old.totalXp + total,
+            speedXp = old.speedXp + speed,
+            driftXp = old.driftXp + drift,
+            controlXp = old.controlXp + control,
+            enduranceXp = old.enduranceXp + endurance,
+            sessionsCompleted = old.sessionsCompleted + 1,
+            totalDistanceMeters = old.totalDistanceMeters + session.distanceMeters.coerceAtLeast(0.0),
+            totalDriveSeconds = old.totalDriveSeconds + session.durationSeconds.coerceAtLeast(0.0),
+            topSpeedMph = maxOf(old.topSpeedMph, session.maxSpeedMph),
+            bestDriftScore = maxOf(old.bestDriftScore, session.driftScore),
+            bestDriftAngleDeg = maxOf(old.bestDriftAngleDeg, session.maxDriftAngleDeg),
+            cleanSessions = old.cleanSessions + if (cleanSession) 1 else 0,
+            totalShifts = old.totalShifts + session.totalShifts.coerceAtLeast(0),
+            quarterMileRuns = old.quarterMileRuns + if (session.quarterMile != null) 1 else 0,
+            brakeRuns = old.brakeRuns + if (session.sixtyToZeroSeconds != null || session.hundredToZeroSeconds != null) 1 else 0,
+            totalCrashes = old.totalCrashes + session.crashCount.coerceAtLeast(0)
+        )
+        val unlocked = AchievementCatalog.resolvedUnlocked(updatedWithoutAchievements, old.achievements)
+        val newlyUnlocked = unlocked.filterNot { it in old.achievements }
+        val updated = updatedWithoutAchievements.copy(achievements = unlocked)
+        saveProgress(updated, processed)
+        return updated to XpAward(total, speed, drift, control, endurance, newlyUnlocked)
+    }
+
+    @Synchronized
+    fun applyLiveDelta(delta: LiveProgressDelta): Pair<DriverProgress, XpAward?> {
+        if (!delta.hasChanges) return load() to null
+        val old = load()
+        val updatedWithoutAchievements = old.copy(
+            totalXp = old.totalXp + delta.totalXp,
+            speedXp = old.speedXp + delta.speedXp,
+            driftXp = old.driftXp + delta.driftXp,
+            controlXp = old.controlXp + delta.controlXp,
+            enduranceXp = old.enduranceXp + delta.enduranceXp,
+            sessionsCompleted = old.sessionsCompleted + delta.completedDrives,
+            totalDistanceMeters = old.totalDistanceMeters + delta.distanceMeters.coerceAtLeast(0.0),
+            totalDriveSeconds = old.totalDriveSeconds + delta.driveSeconds.coerceAtLeast(0.0),
+            topSpeedMph = maxOf(old.topSpeedMph, delta.topSpeedMph),
+            bestDriftScore = maxOf(old.bestDriftScore, delta.bestDriftScore),
+            bestDriftAngleDeg = maxOf(old.bestDriftAngleDeg, delta.bestDriftAngleDeg),
+            cleanSessions = old.cleanSessions + delta.cleanDrives,
+            totalShifts = old.totalShifts + delta.shifts,
+            quarterMileRuns = old.quarterMileRuns + delta.quarterMileRuns,
+            brakeRuns = old.brakeRuns + delta.brakeRuns,
+            totalCrashes = old.totalCrashes + delta.crashes,
+            achievementStats = old.achievementStats + delta.achievementStats
+        )
+        val unlocked = AchievementCatalog.resolvedUnlocked(updatedWithoutAchievements, old.achievements)
+        val newlyUnlocked = unlocked.filterNot { it in old.achievements }
+        val updated = updatedWithoutAchievements.copy(achievements = unlocked)
+        saveProgress(updated)
+        val award = XpAward(
+            total = delta.totalXp,
+            speed = delta.speedXp,
+            drift = delta.driftXp,
+            control = delta.controlXp,
+            endurance = delta.enduranceXp,
+            unlockedAchievements = newlyUnlocked
+        ).takeIf { it.total > 0 || it.unlockedAchievements.isNotEmpty() }
+        return updated to award
+    }
+
+    @Synchronized
+    fun clear(): DriverProgress {
+        preferences.edit()
+            .clear()
+            .putInt("schemaVersion", SCHEMA_VERSION)
+            .putInt("achievementCatalogVersion", ACHIEVEMENT_CATALOG_VERSION)
+            .apply()
+        return DriverProgress()
+    }
+
+    private fun saveProgress(progress: DriverProgress, processedSessionIds: Set<String>? = null) {
+        val editor = preferences.edit()
+            .putInt("schemaVersion", SCHEMA_VERSION)
+            .putInt("achievementCatalogVersion", ACHIEVEMENT_CATALOG_VERSION)
+            .putBoolean("needsAchievementRebuild", false)
+            .putLong("totalXp", progress.totalXp)
+            .putLong("speedXp", progress.speedXp)
+            .putLong("driftXp", progress.driftXp)
+            .putLong("controlXp", progress.controlXp)
+            .putLong("enduranceXp", progress.enduranceXp)
+            .putInt("sessionsCompleted", progress.sessionsCompleted)
+            .putStoredDouble("totalDistanceMeters", progress.totalDistanceMeters)
+            .putStoredDouble("totalDriveSeconds", progress.totalDriveSeconds)
+            .putStoredDouble("topSpeedMph", progress.topSpeedMph)
+            .putInt("bestDriftScore", progress.bestDriftScore)
+            .putStoredDouble("bestDriftAngleDeg", progress.bestDriftAngleDeg)
+            .putInt("cleanSessions", progress.cleanSessions)
+            .putInt("totalShifts", progress.totalShifts)
+            .putInt("quarterMileRuns", progress.quarterMileRuns)
+            .putInt("brakeRuns", progress.brakeRuns)
+            .putInt("totalCrashes", progress.totalCrashes)
+            .putInt("legacyAchievementCount", progress.legacyAchievementCount)
+            .putString("achievementStats", encodeAchievementStats(progress.achievementStats))
+            .putStringSet("achievements", progress.achievements)
+        processedSessionIds?.let {
+            editor.putStringSet("processedSessionIds", it.toList().takeLast(200).toSet())
+        }
+        editor.apply()
+    }
+
+    @Synchronized
+    fun reconcile(sessions: List<SessionSummary>): DriverProgress {
+        val old = load()
+        val resolved = AchievementCatalog.resolvedUnlocked(old, old.achievements)
+        val updated = if (resolved == old.achievements) old else old.copy(achievements = resolved)
+        if (updated !== old) saveProgress(updated)
+        return updated
+    }
+}
+
+private fun encodeAchievementStats(stats: Map<String, Double>): String = JSONObject().apply {
+    stats.forEach { (key, value) ->
+        if (key.isNotBlank() && value.isFinite()) put(key, value)
+    }
+}.toString()
+
+private fun decodeAchievementStats(raw: String?): Map<String, Double> {
+    if (raw.isNullOrBlank()) return emptyMap()
+    return runCatching {
+        val json = JSONObject(raw)
+        buildMap {
+            val keys = json.keys()
+            while (keys.hasNext()) {
+                val key = keys.next()
+                val value = json.optDouble(key, Double.NaN)
+                if (value.isFinite()) put(key, value)
+            }
+        }
+    }.getOrDefault(emptyMap())
+}
