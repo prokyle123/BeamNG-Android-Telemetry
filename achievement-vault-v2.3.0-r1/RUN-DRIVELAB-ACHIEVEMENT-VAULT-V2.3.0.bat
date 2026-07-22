@@ -7,7 +7,7 @@ echo DriveLab 2.3.0 - Achievement Vault Rebuilt
 echo ============================================================
 echo.
 
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%~dp0APPLY-DRIVELAB-ACHIEVEMENT-VAULT-V2.3.0.ps1"
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%~dp0APPLY-DRIVELAB-ACHIEVEMENT-VAULT-V2.3.0-FIXED.ps1"
 set "EXITCODE=%ERRORLEVEL%"
 
 echo.
