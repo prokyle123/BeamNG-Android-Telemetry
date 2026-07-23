@@ -40,11 +40,13 @@ Write-Host "Size:   $([math]::Round($ApkItem.Length / 1MB, 2)) MB"
 Write-Host "SHA256: $Sha256"
 Write-Host ""
 Write-Host "The API key stays in this PowerShell process and is not written to disk." -ForegroundColor Yellow
+Write-Host "This uses VirusTotal's public file-scanning API." -ForegroundColor Yellow
 
 $SecureKey = Read-Host "VirusTotal API key" -AsSecureString
 $KeyPointer = [IntPtr]::Zero
 $ApiKey = $null
 $Client = $null
+$Handler = $null
 $Stream = $null
 $Multipart = $null
 $FileContent = $null
@@ -65,6 +67,24 @@ function Get-ResponseText {
     }
 
     return $Body
+}
+
+function Get-AnalysisStat {
+    param(
+        [Parameter(Mandatory)]
+        [object]$Stats,
+
+        [Parameter(Mandatory)]
+        [string]$Name
+    )
+
+    $Property = $Stats.PSObject.Properties[$Name]
+
+    if ($null -eq $Property) {
+        return 0
+    }
+
+    return [int]$Property.Value
 }
 
 try {
@@ -92,11 +112,11 @@ try {
             "https://www.virustotal.com/api/v3/files/upload_url"
         ).GetAwaiter().GetResult()
 
-        $UploadUrlJson = Get-ResponseText \
-            -Response $UploadUrlResponse \
-            -Action "Requesting the VirusTotal upload URL" |
-            ConvertFrom-Json
+        $UploadUrlJsonText = Get-ResponseText \
+            $UploadUrlResponse \
+            "Requesting the VirusTotal upload URL"
 
+        $UploadUrlJson = $UploadUrlJsonText | ConvertFrom-Json
         $UploadUrl = [string]$UploadUrlJson.data
 
         if ([string]::IsNullOrWhiteSpace($UploadUrl)) {
@@ -125,8 +145,8 @@ try {
     ).GetAwaiter().GetResult()
 
     $UploadJsonText = Get-ResponseText \
-        -Response $UploadResponse \
-        -Action "VirusTotal file upload"
+        $UploadResponse \
+        "VirusTotal file upload"
 
     $UploadJson = $UploadJsonText | ConvertFrom-Json
     $AnalysisId = [string]$UploadJson.data.id
@@ -142,7 +162,6 @@ try {
     $EncodedAnalysisId = [Uri]::EscapeDataString($AnalysisId)
     $Deadline = (Get-Date).AddMinutes(40)
     $Status = "queued"
-    $AnalysisJsonText = $null
 
     while ((Get-Date) -lt $Deadline) {
         Start-Sleep -Seconds 20
@@ -152,8 +171,8 @@ try {
         ).GetAwaiter().GetResult()
 
         $AnalysisJsonText = Get-ResponseText \
-            -Response $AnalysisResponse \
-            -Action "Reading VirusTotal analysis status"
+            $AnalysisResponse \
+            "Reading VirusTotal analysis status"
 
         $AnalysisJson = $AnalysisJsonText | ConvertFrom-Json
         $Status = [string]$AnalysisJson.data.attributes.status
@@ -176,8 +195,8 @@ try {
     ).GetAwaiter().GetResult()
 
     $ReportJsonText = Get-ResponseText \
-        -Response $ReportResponse \
-        -Action "Retrieving the VirusTotal file report"
+        $ReportResponse \
+        "Retrieving the VirusTotal file report"
 
     $ReportJson = $ReportJsonText | ConvertFrom-Json
     $ReportedId = [string]$ReportJson.data.id
@@ -194,12 +213,12 @@ try {
         Measure-Object -Sum
     ).Sum
 
-    $Malicious = [int]$Stats.malicious
-    $Suspicious = [int]$Stats.suspicious
-    $Undetected = [int]$Stats.undetected
-    $Harmless = [int]$Stats.harmless
-    $Timeouts = [int]$Stats.timeout
-    $Failures = [int]$Stats.failure
+    $Malicious = Get-AnalysisStat $Stats "malicious"
+    $Suspicious = Get-AnalysisStat $Stats "suspicious"
+    $Undetected = Get-AnalysisStat $Stats "undetected"
+    $Harmless = Get-AnalysisStat $Stats "harmless"
+    $Timeouts = Get-AnalysisStat $Stats "timeout"
+    $Failures = Get-AnalysisStat $Stats "failure"
 
     $ReportUrl = "https://www.virustotal.com/gui/file/$Sha256"
     $ScannedUtc = (Get-Date).ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ")
@@ -279,6 +298,10 @@ finally {
 
     if ($Client) {
         $Client.Dispose()
+    }
+
+    if ($Handler) {
+        $Handler.Dispose()
     }
 
     if ($KeyPointer -ne [IntPtr]::Zero) {
