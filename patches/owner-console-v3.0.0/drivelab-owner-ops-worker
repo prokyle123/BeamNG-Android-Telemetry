@@ -19,7 +19,7 @@ MAX_REQUEST_AGE = 10 * 60
 MAX_OUTPUT = 16000
 
 
-def _systemctl(verb: str, unit: str, timeout: int = 120) -> list[str]:
+def _systemctl(verb: str, unit: str) -> list[str]:
     return ["systemctl", verb, unit]
 
 
@@ -68,7 +68,10 @@ ACTIONS: dict[str, dict[str, Any]] = {
             "-lc",
             "cd /opt/drivelab-license && "
             "/opt/drivelab-license/.venv/bin/python -m compileall -q drivelab_license && "
-            "/opt/drivelab-license/.venv/bin/python -m pytest -q",
+            "if /opt/drivelab-license/.venv/bin/python -c 'import pytest' >/dev/null 2>&1; then "
+            "/opt/drivelab-license/.venv/bin/python -m pytest -q tests; "
+            "else /opt/drivelab-license/.venv/bin/python "
+            "/usr/local/sbin/drivelab-owner-test-runner.py tests; fi",
         ],
         "timeout": 360,
         "detail": "DriveLab license-server tests completed.",
