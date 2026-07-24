@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-SOURCE_URL="https://raw.githubusercontent.com/prokyle123/BeamNG-Android-Telemetry/main/patches/owner-console-v3.0.0/APPLY-DRIVELAB-OWNER-CONSOLE-V3.sh?r6-base=1"
+SOURCE_URL="https://raw.githubusercontent.com/prokyle123/BeamNG-Android-Telemetry/main/patches/owner-console-v3.0.0/APPLY-DRIVELAB-OWNER-CONSOLE-V3.sh?r6-base=2"
 TEMPORARY="$(mktemp /tmp/APPLY-DRIVELAB-OWNER-CONSOLE-V3-R6.XXXXXX.sh)"
 
 cleanup() {
@@ -52,7 +52,7 @@ replace_once(
     '''        "$BASE_URL/$file" \\
         --output "$DOWNLOADS/$file"
 ''',
-    '''        "$BASE_URL/$file?owner-v3-r6=20260723-2015" \\
+    '''        "$BASE_URL/$file?owner-v3-r6=20260723-2025" \\
         --output "$DOWNLOADS/$file"
 ''',
     "payload cache bust",
@@ -67,6 +67,8 @@ replace_once(
     "$DOWNLOADS/owner_control_center.py" \\
     "$DOWNLOADS/drivelab-owner-test-runner-r6.py" \\
     "$DOWNLOADS/drivelab-owner-ops-worker"
+grep -q 'optional Starlette TestClient dependency' \\
+    "$DOWNLOADS/drivelab-owner-test-runner-r6.py"
 ''',
     "payload compilation",
 )
@@ -84,7 +86,7 @@ echo "Payload syntax and systemd validation passed."
 grep -q '^ExecStart=/usr/local/sbin/drivelab-owner-ops-worker$' \\
     "$DOWNLOADS/drivelab-owner-ops.service"
 
-echo "Payload syntax and unit-file marker validation passed."
+echo "Payload syntax and R6 marker validation passed."
 ''',
     "unit validation",
 )
