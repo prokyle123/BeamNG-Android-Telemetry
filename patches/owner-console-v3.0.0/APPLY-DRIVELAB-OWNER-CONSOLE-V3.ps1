@@ -21,16 +21,11 @@ Write-Host "Do not close this window while the installer is running." -Foregroun
 Write-Host "You may be asked for your SSH key passphrase and sudo password." -ForegroundColor Yellow
 Write-Host ""
 
-$RemoteCommand = @"
-set -Eeuo pipefail
-curl --fail --silent --show-error --location --retry 3 '$InstallerUrl' --output '$RemoteInstaller'
-chmod 0700 '$RemoteInstaller'
-sudo bash '$RemoteInstaller'
-"@
+$RemoteCommand = "set -Eeuo pipefail; curl --fail --silent --show-error --location --retry 3 '$InstallerUrl' --output '$RemoteInstaller'; chmod 0700 '$RemoteInstaller'; sudo bash '$RemoteInstaller'"
 
 & $Ssh.Source `
     $Remote `
-    "bash -lc '$($RemoteCommand.Replace("'", "'\"'\"'"))'"
+    $RemoteCommand
 
 $ExitCode = $LASTEXITCODE
 if ($ExitCode -ne 0) {
