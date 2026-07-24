@@ -18,7 +18,7 @@ if [[ "$EUID" -ne 0 ]]; then
     exit 1
 fi
 
-for command in curl python3 sha256sum systemctl runuser install; do
+for command in curl python3 sha256sum systemctl runuser install readlink; do
     command -v "$command" >/dev/null 2>&1 || {
         echo "Required command is missing: $command" >&2
         exit 1
@@ -367,15 +367,45 @@ grep -q 'Device lifecycle intelligence' "$BACKUP/live-lifecycle-overview.html"
 grep -q 'Control Center v3.1.0' "$BACKUP/live-control-center.html"
 grep -q "href='/owner/lifecycle'" "$BACKUP/live-control-center.html"
 
-sha256sum \
+$VENV_PYTHON - \
+    "$STAGE/staged-source.sha256" \
+    "$BACKUP/promoted-source.sha256" \
     "$PACKAGE_ROOT/main.py" \
     "$PACKAGE_ROOT/admin_app.py" \
     "$PACKAGE_ROOT/owner_control_center.py" \
     "$PACKAGE_ROOT/lifecycle.py" \
     "$PACKAGE_ROOT/owner_lifecycle.py" \
-    "$APP_ROOT/tests/test_lifecycle.py" \
-    > "$BACKUP/promoted-source.sha256"
-diff -u "$STAGE/staged-source.sha256" "$BACKUP/promoted-source.sha256"
+    "$APP_ROOT/tests/test_lifecycle.py" <<'PYVERIFY'
+import hashlib
+import sys
+from pathlib import Path
+expected_file = Path(sys.argv[1])
+output_file = Path(sys.argv[2])
+live_paths = [Path(value) for value in sys.argv[3:]]
+expected = {}
+for raw in expected_file.read_text(encoding="utf-8").splitlines():
+    raw = raw.strip()
+    if not raw:
+        continue
+    digest, filename = raw.split(None, 1)
+    expected[Path(filename.strip()).name] = digest.lower()
+actual = {}
+lines = []
+for path in live_paths:
+    digest = hashlib.sha256(path.read_bytes()).hexdigest()
+    actual[path.name] = digest
+    lines.append(f"{digest}  {path}")
+if expected != actual:
+    missing = sorted(set(expected) - set(actual))
+    extra = sorted(set(actual) - set(expected))
+    changed = sorted(name for name in set(expected) & set(actual) if expected[name] != actual[name])
+    raise SystemExit(
+        "Promoted source does not exactly match the tested stage. "
+        f"Missing={missing}, extra={extra}, changed={changed}"
+    )
+output_file.write_text("\n".join(lines) + "\n", encoding="utf-8")
+print("Promoted source hashes exactly match the tested stage.")
+PYVERIFY
 
 date -Is > "$BACKUP/PROMOTION-SUCCEEDED.txt"
 chmod 0600 "$BACKUP/PROMOTION-SUCCEEDED.txt" "$BACKUP/promoted-source.sha256" \
