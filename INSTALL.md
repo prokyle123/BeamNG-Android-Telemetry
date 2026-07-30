@@ -2,13 +2,25 @@
 
 ## Install DriveLab Telem
 
-1. Download the current `DriveLab-Telem-vX.Y.Z.apk` from [GitHub Releases](https://github.com/prokyle123/BeamNG-Android-Telemetry/releases/latest).
-2. Open the downloaded APK on the Android phone or tablet.
-3. Android may ask permission for the browser or file manager to install unknown apps. Enable it only for the app used to open the APK.
-4. Install and open DriveLab Telem.
-5. Continue in Free Edition or enter a purchased `DLT-...` serial key to activate Full Edition.
+1. Visit the [official DriveLab website](https://drivelabregistration.org).
+2. During closed testing, follow the website instructions to join the approved Google Play test and open the Play Store testing link.
+3. After public launch, open the official DriveLab Telem listing in the Google Play Store.
+4. Install and open DriveLab Telem through Google Play.
+5. Continue with the available Free Edition features. After production launch, Full Edition can be unlocked through the optional one-time Google Play purchase.
 
-When updating, install the new APK **over the existing app**. Do not uninstall first. The package name and permanent signing certificate are preserved so Android can retain the activation, settings, progression, achievements, TrackLab courses, sessions, and other app data.
+DriveLab is no longer distributed as a downloadable APK through GitHub, the website, or third-party mirrors. Google Play is the official installation and update channel.
+
+### Migrating from a legacy GitHub APK
+
+Legacy GitHub/sideloaded builds were signed differently from the Google Play release and cannot be updated in place.
+
+1. Export or record any locally stored information you want to keep where the legacy app provides that option.
+2. Uninstall the legacy DriveLab APK.
+3. Join the approved test or open the public Play Store listing.
+4. Install the official Google Play build.
+5. Use Google Play for all future updates.
+
+Uninstalling a legacy build removes its local app data, including locally stored settings, progression, achievements, TrackLab courses, sessions, and other saved information.
 
 ## Connect BeamNG.drive
 
@@ -49,20 +61,22 @@ RaceLink requires Full Edition and internet access on every participating device
 
 RaceLink coordinates timing and results between phones. It does not create a BeamMP server or place cars into the same BeamNG world.
 
-## Secure in-app updates
+## Updates
 
-Open **Setup > App Update** and press **Check Now**. DriveLab verifies the signed update manifest, APK SHA-256, package name, version, minimum Android version, and permanent Android signing certificate before opening Android's installer.
+Google Play is the only supported update channel for the Play-distributed build. Leave automatic updates enabled or open the DriveLab Telem Play Store listing and press **Update** when a new release is available.
+
+Do not install archived APK files over the Google Play version. Android will reject packages signed with a different key, and unofficial files may be outdated or unsafe.
 
 ## Common problems
 
 - **No telemetry:** Confirm the Android IP, UDP ports, same-network connection, and Windows firewall rules.
 - **OutGauge only:** MotionSim must be enabled separately on port `4445`.
 - **Wrong Android IP:** Refresh the address in Setup after changing Wi-Fi networks.
-- **Invalid serial key:** Re-enter the key exactly as delivered.
-- **Device limit:** Contact support to reset an old device after replacing a phone.
+- **Cannot install the Play version:** Uninstall any legacy GitHub/sideloaded DriveLab build first because it uses a different signing identity.
+- **Lost local data after migration:** Uninstalling the legacy build removes its local data. The different signing identity prevents an in-place upgrade.
+- **Purchase not restored:** Confirm the same Google account is active in Google Play, verify internet access, and use the app's restore/refresh entitlement option.
 - **RaceLink profile missing:** Confirm internet access, open RaceLink, and use **Refresh Profile**.
-- **Friend code not visible:** Update to version 2.1.0 or newer.
+- **Friend code not visible:** Confirm the current Google Play version is installed.
 - **Cannot mark Ready:** The host must save a valid course and race setup first.
 - **Start Race disabled:** Every connected driver must be online and ready.
 - **Race results do not match:** Confirm everyone is on the same map and using the shared course.
-- **Cannot install update:** Never uninstall first. Confirm the APK came from the official website, signed updater, or this repository.
