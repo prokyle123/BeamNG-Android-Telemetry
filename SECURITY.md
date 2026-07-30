@@ -1,41 +1,37 @@
-# DriveLab Telem security and APK verification
+# DriveLab Telem security and distribution
 
-## Current production APK
+## Official installation source
 
-| Item | Verified value |
-|---|---|
-| Version | **2.1.0 (32)** |
-| Android package | `com.auroramediagroup.drivelab` |
-| APK filename | `DriveLab-Telem-v2.1.0.apk` |
-| APK SHA-256 | `57f610404070d6f5deee471c531962d3d02d9397f7a73a0d5c274fcad7facbf3` |
-| Signing certificate SHA-256 | `c27df4a0e5f3cd2f99d7240a49f3ce7936340d3359420872a651e3d4fed8b82d` |
-| VirusTotal result | **0 of 74 engine results flagged the APK** |
-| Scan time | `2026-07-20T18:00:34Z` |
+DriveLab Telem is distributed only through the official Google Play testing or production listing reached from the [DriveLab website](https://drivelabregistration.org).
 
-[View the independent VirusTotal report](https://www.virustotal.com/gui/file/57f610404070d6f5deee471c531962d3d02d9397f7a73a0d5c274fcad7facbf3/detection)
+This GitHub repository no longer provides a downloadable APK. Archived APK files, mirrors, reposts, and third-party download pages are unsupported and may contain outdated builds that cannot receive official updates.
 
-The exact APK was matched against DriveLab's signed production update feed, verified with Android's `apksigner`, and submitted for a fresh VirusTotal multi-engine analysis. Microsoft Defender status for the publisher's local release copy: **passed**.
+## Google Play signing and updates
 
-## Verify a download
+The Google Play release uses the signing identity managed for Play distribution. Android and Google Play verify the package signature before installation and before applying an update.
 
-On Windows PowerShell:
+Legacy GitHub/sideloaded builds used a different signing identity and cannot be upgraded in place to the Google Play version. Users migrating from a legacy build must:
 
-```powershell
-Get-FileHash .\DriveLab-Telem-v2.1.0.apk -Algorithm SHA256
-```
+1. Export or record important local information where possible.
+2. Uninstall the legacy DriveLab build.
+3. Install the official version through Google Play.
+4. Receive all future updates through Google Play.
 
-The result must match:
+Uninstalling the legacy build removes its locally stored settings, progression, achievements, courses, sessions, and other local app data.
 
-```text
-57f610404070d6f5deee471c531962d3d02d9397f7a73a0d5c274fcad7facbf3
-```
+## Protect your account and entitlement information
 
-Install updates directly over the existing app. Do not uninstall first, because uninstalling removes local DriveLab data.
+Do not post or share:
 
-## Important limitation
+- Google Play order information
+- Purchase or entitlement tokens
+- DriveLab account or refresh tokens
+- Admin tokens
+- Private customer information
+- Signing material or server credentials
 
-No antivirus or malware-scanning service can guarantee that software is completely risk-free. The published result is a point-in-time independent scan of one exact SHA-256 build. Download only from the official DriveLab website, the signed in-app updater, or this GitHub repository, and confirm the checksum before manual installation.
+DriveLab support will not ask you to install an APK from an email attachment, direct message, file-sharing site, or unofficial mirror.
 
 ## Reporting a security concern
 
-Do not post license keys, refresh tokens, admin tokens, private customer information, or signing material in a public issue. Contact **auroramediagroup1@gmail.com** with the app version, APK SHA-256, device model, Android version, and a description of the concern.
+Contact **auroramediagroup1@gmail.com** with the app version, device model, Android version, and a clear description of the concern. Include screenshots only after removing purchase information, account identifiers, tokens, and other sensitive data.
