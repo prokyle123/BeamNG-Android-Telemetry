@@ -1,0 +1,1 @@
+Rebuild WorldSense v0.2 after restoring AdaptiveIntelligence.
