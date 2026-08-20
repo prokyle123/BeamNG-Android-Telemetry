@@ -2,7 +2,9 @@
 WorldSense-v3.0.0-SOURCE.zip: OK
 === reconstruct 3.1 delta ===
 
-gzip: stdin: unexpected end of file
+gzip: stdin: invalid compressed data--crc error
+
+gzip: stdin: invalid compressed data--length error
 === apply 3.1 delta ===
 === verify patched source ===
 === gradle release compile ===
