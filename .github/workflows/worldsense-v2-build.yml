@@ -1,4 +1,4 @@
-name: Build WorldSense v2.0.1 APK
+name: Build WorldSense v2.0.2 CLEAN APK
 
 on:
   push:
@@ -66,10 +66,11 @@ jobs:
           fi
 
           if [ "$code" -eq 0 ]; then
-            echo '=== apply update-safe version bump ===' >> "$LOG"
-            sed -i 's/versionCode 200/versionCode 20001/' "$SRC/app/build.gradle"
-            sed -i "s/versionName '2.0.0'/versionName '2.0.1'/" "$SRC/app/build.gradle"
-            grep -E 'versionCode|versionName' "$SRC/app/build.gradle" >> "$LOG"
+            echo '=== apply clean-install package + version ===' >> "$LOG"
+            sed -i "s/applicationId 'com.ghost.worldsense'/applicationId 'com.ghost.worldsense2'/" "$SRC/app/build.gradle"
+            sed -i 's/versionCode 200/versionCode 20002/' "$SRC/app/build.gradle"
+            sed -i "s/versionName '2.0.0'/versionName '2.0.2'/" "$SRC/app/build.gradle"
+            grep -E 'applicationId|versionCode|versionName' "$SRC/app/build.gradle" >> "$LOG"
           fi
 
           if [ "$code" -eq 0 ]; then
@@ -93,8 +94,8 @@ jobs:
               code=90
             else
               UNSIGNED="$SRC/app/build/outputs/apk/release/app-release-unsigned.apk"
-              ALIGNED="$OUT/WorldSense-v2.0.1-aligned.apk"
-              APK="$OUT/WorldSense-v2.0.1.apk"
+              ALIGNED="$OUT/WorldSense-v2.0.2-CLEAN-aligned.apk"
+              APK="$OUT/WorldSense-v2.0.2-CLEAN.apk"
               "$BT/zipalign" -f 4 "$UNSIGNED" "$ALIGNED" >> "$LOG" 2>&1
               code=$?
               if [ "$code" -eq 0 ]; then
@@ -111,16 +112,20 @@ jobs:
                 code=$?
               fi
               if [ "$code" -eq 0 ]; then
+                "$BT/aapt" dump badging "$APK" > "$OUT/package-report.txt" 2>&1
+                code=$?
+              fi
+              if [ "$code" -eq 0 ]; then
                 rm -f "$ALIGNED"
-                (cd "$OUT" && sha256sum WorldSense-v2.0.1.apk > WorldSense-v2.0.1.apk.sha256)
+                (cd "$OUT" && sha256sum WorldSense-v2.0.2-CLEAN.apk > WorldSense-v2.0.2-CLEAN.apk.sha256)
               fi
             fi
           fi
 
           if [ "$code" -eq 0 ]; then
-            printf 'WorldSense v2.0.1 build outcome: success\nWorkflow source commit: %s\n' "$GITHUB_SHA" > "$STATUS"
+            printf 'WorldSense v2.0.2 CLEAN build outcome: success\nWorkflow source commit: %s\n' "$GITHUB_SHA" > "$STATUS"
           else
-            printf 'WorldSense v2.0.1 build outcome: failed\nWorkflow source commit: %s\nExit code: %s\n' "$GITHUB_SHA" "$code" > "$STATUS"
+            printf 'WorldSense v2.0.2 CLEAN build outcome: failed\nWorkflow source commit: %s\nExit code: %s\n' "$GITHUB_SHA" "$code" > "$STATUS"
           fi
           exit 0
 
@@ -132,6 +137,6 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add worldsense-v2-out || true
-          git commit -m 'Record WorldSense v2.0.1 build result' || true
+          git commit -m 'Record WorldSense v2.0.2 CLEAN build result' || true
           git pull --rebase origin worldsense-v2-build-20260820 || true
           git push origin HEAD:worldsense-v2-build-20260820
