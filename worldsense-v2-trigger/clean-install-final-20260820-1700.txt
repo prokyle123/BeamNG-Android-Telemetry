@@ -1,0 +1,1 @@
+Single final trigger for WorldSense v2.0.2 clean-install package. No workflow edits after this.
