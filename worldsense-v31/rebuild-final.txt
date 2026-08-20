@@ -1,0 +1,1 @@
+WorldSense 3.1 isolated final rebuild — verified source/patch, no code changes.
