@@ -36,10 +36,16 @@ jobs:
           unzip -q WorldSense-v0.1.0-CLEAN-SOURCE.zip -d worldsense
 
       - name: Build installable debug APK
+        id: buildapk
+        continue-on-error: true
         working-directory: worldsense
-        run: gradle --no-daemon :app:assembleDebug
+        shell: bash
+        run: |
+          set -o pipefail
+          gradle --no-daemon :app:assembleDebug 2>&1 | tee ../worldsense-build.log
 
       - name: Stage APK
+        if: steps.buildapk.outcome == 'success'
         shell: bash
         run: |
           set -euo pipefail
@@ -47,6 +53,7 @@ jobs:
           sha256sum WorldSense-v0.1.0.apk > WorldSense-v0.1.0.apk.sha256
 
       - uses: actions/upload-artifact@v4
+        if: steps.buildapk.outcome == 'success'
         with:
           name: WorldSense-v0.1.0-APK
           path: |
@@ -54,16 +61,27 @@ jobs:
             WorldSense-v0.1.0.apk.sha256
           if-no-files-found: error
 
-      - name: Publish APK to temporary branch
+      - name: Publish build result to temporary branch
+        if: always()
         shell: bash
         run: |
           set -euo pipefail
           mkdir -p worldsense-build
-          cp WorldSense-v0.1.0.apk worldsense-build/WorldSense-v0.1.0.apk
-          cp WorldSense-v0.1.0.apk.sha256 worldsense-build/WorldSense-v0.1.0.apk.sha256
-          printf 'WorldSense v0.1.0 build succeeded\nCommit: %s\n' "$GITHUB_SHA" > worldsense-build/build-status.txt
+          cp worldsense-build.log worldsense-build/build-log.txt 2>/dev/null || true
+          printf 'WorldSense v0.1.0 build outcome: %s\nWorkflow commit: %s\n' '${{ steps.buildapk.outcome }}' "$GITHUB_SHA" > worldsense-build/build-status.txt
+          if [ -f WorldSense-v0.1.0.apk ]; then
+            cp WorldSense-v0.1.0.apk worldsense-build/WorldSense-v0.1.0.apk
+            cp WorldSense-v0.1.0.apk.sha256 worldsense-build/WorldSense-v0.1.0.apk.sha256
+          fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add worldsense-build/WorldSense-v0.1.0.apk worldsense-build/WorldSense-v0.1.0.apk.sha256 worldsense-build/build-status.txt
-          git commit -m 'Build WorldSense v0.1.0 APK'
+          git add worldsense-build/build-status.txt worldsense-build/build-log.txt
+          if [ -f worldsense-build/WorldSense-v0.1.0.apk ]; then
+            git add worldsense-build/WorldSense-v0.1.0.apk worldsense-build/WorldSense-v0.1.0.apk.sha256
+          fi
+          git commit -m 'Record WorldSense v0.1.0 build result' || true
           git push origin HEAD:worldsense-build-v0.1.0-20260820
+
+      - name: Fail job if APK build failed
+        if: steps.buildapk.outcome != 'success'
+        run: exit 1
