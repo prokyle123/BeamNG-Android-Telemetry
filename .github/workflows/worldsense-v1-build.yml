@@ -59,6 +59,14 @@ jobs:
             code=$?
           fi
 
+          if [ "$code" -eq 0 ]; then
+            echo '=== osmdroid API compatibility patch ===' >> "$LOG"
+            MAPFILE="$SRC/app/src/main/java/com/ghost/worldsense/WorldMapView.java"
+            sed -i 's/Configuration cfg=Configuration.getInstance();/org.osmdroid.config.IConfigurationProvider cfg=Configuration.getInstance();/' "$MAPFILE"
+            grep -n 'IConfigurationProvider cfg' "$MAPFILE" >> "$LOG" 2>&1
+            code=$?
+          fi
+
           KEYSTORE="$SIGN/worldsense-v1-dev.jks"
           if [ "$code" -eq 0 ]; then
             echo '=== stable signing key ===' >> "$LOG"
