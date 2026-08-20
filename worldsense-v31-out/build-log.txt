@@ -1,0 +1,34 @@
+=== reconstruct verified v3 base ===
+WorldSense-v3.0.0-SOURCE.zip: OK
+=== reconstruct 3.1 delta ===
+worldsense-v31.patch: OK
+=== apply 3.1 delta ===
+patching file app/build.gradle
+patching file app/src/main/java/com/ghost/worldsense/MainActivity.java
+patching file app/src/main/java/com/ghost/worldsense/WorldDb.java
+patching file app/src/main/java/com/ghost/worldsense/WorldMapView.java
+=== verify patched source ===
+c5e767b0d782288ed2bcebf4b52d8fe43044b3889ee3f1cfd178a4ce336433de  app/build.gradle
+40ce4149baa06040b0206bf1364c7e254a9fc91d246cf01b937f07c3a8ddf13b  app/src/main/java/com/ghost/worldsense/MainActivity.java
+1e5c9350534888f9bcf5b0f7743f7afa61d1f1f5d2abfd63cb68e4241cd8d427  app/src/main/java/com/ghost/worldsense/WorldMapView.java
+562d7aa2fc58f4b2c6737e02c3d39eeb031875583181e6137380914bd8c8b5f1  app/src/main/java/com/ghost/worldsense/WorldDb.java
+app/build.gradle: OK
+app/src/main/java/com/ghost/worldsense/MainActivity.java: OK
+app/src/main/java/com/ghost/worldsense/WorldMapView.java: OK
+app/src/main/java/com/ghost/worldsense/WorldDb.java: OK
+        applicationId 'com.ghost.worldsense2'
+        versionCode 30100
+        versionName '3.1.0'
+=== gradle release compile ===
+
+Welcome to Gradle 8.11.1!
+
+Here are the highlights of this release:
+ - Parallel load and store for Configuration Cache
+ - Java compilation errors at the end of the build output
+ - Consolidated report for warnings and deprecations
+
+For more details see https://docs.gradle.org/8.11.1/release-notes.html
+
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.11.1/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
