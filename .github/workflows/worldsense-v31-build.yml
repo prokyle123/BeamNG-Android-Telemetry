@@ -5,14 +5,14 @@ on:
     branches:
       - worldsense-v31-build-20260820
     paths:
-      - 'worldsense-v31/**'
+      - 'worldsense-v31-final/**'
       - '.github/workflows/worldsense-v31-build.yml'
 
 permissions:
   contents: write
 
 concurrency:
-  group: worldsense-v31-build
+  group: worldsense-v31-final-build
   cancel-in-progress: true
 
 jobs:
@@ -23,24 +23,22 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '17'
-
       - uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.11.1'
 
-      - name: Reconstruct patch compile sign verify
+      - name: Reconstruct compile sign verify
         shell: bash
         run: |
           set +e
           OUT="$GITHUB_WORKSPACE/worldsense-v31-out"
           SRC="$GITHUB_WORKSPACE/worldsense-v31-src"
           BASEZIP="$GITHUB_WORKSPACE/WorldSense-v3.0.0-SOURCE.zip"
-          PATCH="$GITHUB_WORKSPACE/worldsense-v31.patch"
+          PATCH="$GITHUB_WORKSPACE/worldsense-v31-base.patch"
           LOG="$OUT/build-log.txt"
           STATUS="$OUT/build-status.txt"
           KEYSTORE="$GITHUB_WORKSPACE/worldsense-v1-signing/worldsense-v1-dev.jks"
@@ -56,32 +54,55 @@ jobs:
             echo '4cf295bad70c0de9d68117a75e5a90fd96eb92e34d685310455e4445651f54ee  WorldSense-v3.0.0-SOURCE.zip' | sha256sum -c - >> "$LOG" 2>&1
             code=$?
           fi
-
           if [ "$code" -eq 0 ]; then
             unzip -q "$BASEZIP" -d "$SRC" >> "$LOG" 2>&1
             code=$?
           fi
 
-          echo '=== reconstruct 3.1 delta ===' >> "$LOG"
+          echo '=== reconstruct original verified 3.1 delta from history ===' >> "$LOG"
           if [ "$code" -eq 0 ]; then
-            cat worldsense-v31/patch/part* | tr -d '\r\n' | base64 -d | gzip -d > "$PATCH" 2>> "$LOG"
+            for n in 00 01 02 03 04; do git show f00cdbd77583471a27ef3e87242883a44d7caff9:worldsense-v31/patch/part$n; done | tr -d '\r\n' | base64 -d | gzip -d > "$PATCH" 2>> "$LOG"
             code=$?
           fi
           if [ "$code" -eq 0 ]; then
-            echo '31a57f1c6ae3409b8e896ddd9631a1caba7f210eb4352723811159872da68025  worldsense-v31.patch' | sha256sum -c - >> "$LOG" 2>&1
+            echo 'c9b2a24456cb923b1b6a7c08ba5c6198c6e5ccd8744178ba96e88b1505c9d88e  worldsense-v31-base.patch' | sha256sum -c - >> "$LOG" 2>&1
             code=$?
           fi
-
-          echo '=== apply 3.1 delta ===' >> "$LOG"
           if [ "$code" -eq 0 ]; then
             patch -p1 -d "$SRC" < "$PATCH" >> "$LOG" 2>&1
             code=$?
           fi
 
-          echo '=== verify patched source ===' >> "$LOG"
+          echo '=== apply inspector string compile fix ===' >> "$LOG"
+          if [ "$code" -eq 0 ]; then
+            SRCROOT="$SRC" python3 - <<'PY' >> "$LOG" 2>&1
+          import os
+          from pathlib import Path
+          p=Path(os.environ['SRCROOT'])/'app/src/main/java/com/ghost/worldsense/WorldMapView.java'
+          s=p.read_text()
+          start=s.index('        @Override public boolean onSingleTapConfirmed')
+          end=s.index('        private float dist2', start)
+          new='''        @Override public boolean onSingleTapConfirmed(MotionEvent e,MapView mapView){Projection pr=mapView.getProjection();float best=Float.MAX_VALUE;String info=null;double lat=0,lon=0;Point q=new Point();
+              for(WorldDb.EventPoint x:events){if(!valid(x.lat,x.lon))continue;pr.toPixels(new GeoPoint(x.lat,x.lon),q);float d=dist2(e.getX(),e.getY(),q.x,q.y);if(d<best&&d<85*85){best=d;lat=x.lat;lon=x.lon;info="EVENT • "+x.title+"\\n"+x.category+" • severity "+x.severity+" • "+ageText(x.ts)+"\\n"+trim(x.detail,110);}}
+              for(WorldDb.DevicePoint x:devices){if(!valid(x.lat,x.lon))continue;pr.toPixels(new GeoPoint(x.lat,x.lon),q);float d=dist2(e.getX(),e.getY(),q.x,q.y);if(d<best&&d<75*75){best=d;lat=x.lat;lon=x.lon;info="DEVICE • "+trim(x.label==null||x.label.isEmpty()?x.kind:x.label,52)+"\\n"+x.kind+" • "+Math.round(x.rssi)+" dBm • seen "+x.seenCount+"×\\n"+x.cells+" learned areas • ID "+trim(x.anon,8)+" • "+ageText(x.ts);}}
+              for(WorldDb.PlacePoint x:places){if(!valid(x.lat,x.lon))continue;pr.toPixels(new GeoPoint(x.lat,x.lon),q);float d=dist2(e.getX(),e.getY(),q.x,q.y);if(d<best&&d<68*68){best=d;lat=x.lat;lon=x.lon;String name=x.label==null||x.label.isEmpty()?"Learned area":x.label;info="AREA • "+name+"\\n"+x.samples+" samples • "+x.motion+" • cell "+Math.round(x.avgCell)+" dBm\\nBLE "+Math.round(x.avgBle)+" • Wi-Fi "+Math.round(x.avgWifi)+" • "+ageText(x.lastTs);}}
+              int step=Math.max(1,route.size()/700),i=0;for(WorldDb.RoutePoint x:route){if((i++%step)!=0||!valid(x.lat,x.lon))continue;pr.toPixels(new GeoPoint(x.lat,x.lon),q);float d=dist2(e.getX(),e.getY(),q.x,q.y);if(d<best&&d<48*48){best=d;lat=x.lat;lon=x.lon;info="ROUTE SAMPLE • "+ageText(x.ts)+"\\n"+String.format(Locale.US,"%.1f mph • cell %d dBm • GPS ±%.0f m",x.speed*2.2369363,x.cellDbm,x.accuracy)+"\\n"+String.format(Locale.US,"anomaly %.0f • quality %.0f • rough %.2f",x.anomaly,x.quality,x.rough);}}
+              if(info!=null){selectedGeo=new GeoPoint(lat,lon);selectedInfo=info;if(selectionListener!=null)selectionListener.onSelection(info,lat,lon);map.invalidate();return true;}selectedGeo=null;selectedInfo="Nothing selected — tap closer to a route, learned area, device, or event.";if(selectionListener!=null)selectionListener.onSelection(selectedInfo,0,0);map.invalidate();return false;}
+          '''
+          s=s[:start]+new+s[end:]
+          trim_start=s.index('        private String trim(')
+          trim_close=s.index(';}', trim_start)+2
+          trim_new="        private String trim(String s,int n){if(s==null)return\"\";s=s.replace('\\n',' ');return s.length()<=n?s:s.substring(0,n-1)+\"…\";}"
+          s=s[:trim_start]+trim_new+s[trim_close:]
+          p.write_text(s)
+          print('Inspector string fix applied')
+          PY
+            code=$?
+          fi
+
+          echo '=== verify final 3.1 source ===' >> "$LOG"
           if [ "$code" -eq 0 ]; then
             cd "$SRC"
-            sha256sum app/build.gradle app/src/main/java/com/ghost/worldsense/MainActivity.java app/src/main/java/com/ghost/worldsense/WorldMapView.java app/src/main/java/com/ghost/worldsense/WorldDb.java >> "$LOG" 2>&1
             echo 'c5e767b0d782288ed2bcebf4b52d8fe43044b3889ee3f1cfd178a4ce336433de  app/build.gradle' | sha256sum -c - >> "$LOG" 2>&1 || code=$?
             echo '40ce4149baa06040b0206bf1364c7e254a9fc91d246cf01b937f07c3a8ddf13b  app/src/main/java/com/ghost/worldsense/MainActivity.java' | sha256sum -c - >> "$LOG" 2>&1 || code=$?
             echo '22a6510f2019cad3b840d93ed6b78df013961175843552c836ff52ec8b5f2e57  app/src/main/java/com/ghost/worldsense/WorldMapView.java' | sha256sum -c - >> "$LOG" 2>&1 || code=$?
@@ -104,52 +125,29 @@ jobs:
           fi
 
           if [ "$code" -eq 0 ]; then
-            echo '=== align sign verify ===' >> "$LOG"
             BT="$(ls -d "$ANDROID_HOME"/build-tools/* 2>/dev/null | sort -V | tail -1)"
-            if [ -z "$BT" ]; then
-              echo 'Android build-tools directory not found' >> "$LOG"
-              code=90
-            else
-              UNSIGNED="$SRC/app/build/outputs/apk/release/app-release-unsigned.apk"
-              ALIGNED="$OUT/WorldSense-v3.1.0-aligned.apk"
-              APK="$OUT/WorldSense-v3.1.0.apk"
-              "$BT/zipalign" -f 4 "$UNSIGNED" "$ALIGNED" >> "$LOG" 2>&1
-              code=$?
-              if [ "$code" -eq 0 ]; then
-                "$BT/apksigner" sign \
-                  --ks "$KEYSTORE" \
-                  --ks-pass pass:worldsense-dev-2026 \
-                  --key-pass pass:worldsense-dev-2026 \
-                  --ks-key-alias worldsense-v1 \
-                  --out "$APK" "$ALIGNED" >> "$LOG" 2>&1
-                code=$?
-              fi
-              if [ "$code" -eq 0 ]; then
-                "$BT/apksigner" verify --verbose --print-certs "$APK" > "$OUT/signing-report.txt" 2>&1
-                code=$?
-              fi
-              if [ "$code" -eq 0 ]; then
-                if [ -x "$BT/aapt" ]; then
-                  "$BT/aapt" dump badging "$APK" > "$OUT/package-report.txt" 2>&1
-                else
-                  "$BT/aapt2" dump badging "$APK" > "$OUT/package-report.txt" 2>&1
-                fi
-                grep -m1 '^package:' "$OUT/package-report.txt" >> "$LOG" 2>&1
-                if ! grep -q "name='com.ghost.worldsense2'" "$OUT/package-report.txt" || ! grep -q "versionCode='30100'" "$OUT/package-report.txt" || ! grep -q "versionName='3.1.0'" "$OUT/package-report.txt"; then
-                  echo 'Package/version verification FAILED' >> "$LOG"
-                  code=92
-                fi
-              fi
-              if [ "$code" -eq 0 ]; then
-                rm -f "$ALIGNED"
-                (cd "$OUT" && sha256sum WorldSense-v3.1.0.apk > WorldSense-v3.1.0.apk.sha256)
-                ls -lh "$APK" >> "$LOG" 2>&1
-              fi
+            UNSIGNED="$SRC/app/build/outputs/apk/release/app-release-unsigned.apk"
+            ALIGNED="$OUT/WorldSense-v3.1.0-aligned.apk"
+            APK="$OUT/WorldSense-v3.1.0.apk"
+            "$BT/zipalign" -f 4 "$UNSIGNED" "$ALIGNED" >> "$LOG" 2>&1 || code=$?
+            if [ "$code" -eq 0 ]; then
+              "$BT/apksigner" sign --ks "$KEYSTORE" --ks-pass pass:worldsense-dev-2026 --key-pass pass:worldsense-dev-2026 --ks-key-alias worldsense-v1 --out "$APK" "$ALIGNED" >> "$LOG" 2>&1 || code=$?
+            fi
+            if [ "$code" -eq 0 ]; then
+              "$BT/apksigner" verify --verbose --print-certs "$APK" > "$OUT/signing-report.txt" 2>&1 || code=$?
+            fi
+            if [ "$code" -eq 0 ]; then
+              "$BT/aapt" dump badging "$APK" > "$OUT/package-report.txt" 2>&1 || "$BT/aapt2" dump badging "$APK" > "$OUT/package-report.txt" 2>&1
+              if ! grep -q "name='com.ghost.worldsense2'" "$OUT/package-report.txt" || ! grep -q "versionCode='30100'" "$OUT/package-report.txt" || ! grep -q "versionName='3.1.0'" "$OUT/package-report.txt"; then code=92; fi
+            fi
+            if [ "$code" -eq 0 ]; then
+              rm -f "$ALIGNED"
+              (cd "$OUT" && sha256sum WorldSense-v3.1.0.apk > WorldSense-v3.1.0.apk.sha256)
             fi
           fi
 
           if [ "$code" -eq 0 ]; then
-            printf 'WorldSense v3.1.0 build outcome: success\nWorkflow source commit: %s\nPatch SHA-256: 31a57f1c6ae3409b8e896ddd9631a1caba7f210eb4352723811159872da68025\n' "$GITHUB_SHA" > "$STATUS"
+            printf 'WorldSense v3.1.0 build outcome: success\nWorkflow source commit: %s\nFinal WorldMapView SHA-256: 22a6510f2019cad3b840d93ed6b78df013961175843552c836ff52ec8b5f2e57\n' "$GITHUB_SHA" > "$STATUS"
           else
             printf 'WorldSense v3.1.0 build outcome: failed\nWorkflow source commit: %s\nExit code: %s\n' "$GITHUB_SHA" "$code" > "$STATUS"
           fi
@@ -163,6 +161,6 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add worldsense-v31-out || true
-          git commit -m 'Record WorldSense v3.1.0 build result' || true
+          git commit -m 'Record WorldSense v3.1.0 final build result' || true
           git pull --rebase origin worldsense-v31-build-20260820 || true
           git push origin HEAD:worldsense-v31-build-20260820
