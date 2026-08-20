@@ -1,0 +1,18 @@
+Verifies
+Verified using v1 scheme (JAR signing): false
+Verified using v2 scheme (APK Signature Scheme v2): true
+Verified using v3 scheme (APK Signature Scheme v3): true
+Verified using v3.1 scheme (APK Signature Scheme v3.1): false
+Verified using v3.2 scheme (APK Signature Scheme v3.2): false
+Verified using v4 scheme (APK Signature Scheme v4): false
+Verified for SourceStamp: false
+Number of signers: 1
+V3.0 Signer: certificate DN: CN=WorldSense Development, O=WorldSense, C=US
+V3.0 Signer: certificate SHA-256 digest: c506ad03a7dcc06f6fb07f387d83d05505745b5b8bf679e0587875a9c8b20add
+V3.0 Signer: certificate SHA-1 digest: ff4658bbf4b4988db0157d137b2657b9e657834f
+V3.0 Signer: certificate MD5 digest: da97cf2544ae10080e11fa45c4ab9cdc
+V3.0 Signer: key algorithm: RSA
+V3.0 Signer: key size (bits): 3072
+V3.0 Signer: public key SHA-256 digest: f70848cb3d99412d68c0426ef42d017aab2dc075132c7ee4944aba6218f9bfd6
+V3.0 Signer: public key SHA-1 digest: b1fdba24700b2f451f67c9f5d2e3e8173ea4c96e
+V3.0 Signer: public key MD5 digest: 4a790fd5df02d07b973fb2cb07442585

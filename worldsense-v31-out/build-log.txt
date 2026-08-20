@@ -1,20 +1,90 @@
-=== reconstruct verified v3 base ===
+=== verified 3.0 base ===
 WorldSense-v3.0.0-SOURCE.zip: OK
-=== reconstruct original verified 3.1 delta from history ===
+=== verified 3.1 map/table delta ===
 worldsense-v31-base.patch: OK
 patching file app/build.gradle
 patching file app/src/main/java/com/ghost/worldsense/MainActivity.java
 patching file app/src/main/java/com/ghost/worldsense/WorldDb.java
 patching file app/src/main/java/com/ghost/worldsense/WorldMapView.java
-=== apply inspector string compile fix ===
-Inspector string fix applied
-=== verify final 3.1 source ===
-app/build.gradle: OK
-app/src/main/java/com/ghost/worldsense/MainActivity.java: OK
-app/src/main/java/com/ghost/worldsense/WorldMapView.java: FAILED
-sha256sum: WARNING: 1 computed checksum did NOT match
-app/src/main/java/com/ghost/worldsense/WorldDb.java: OK
+=== fix inspector strings ===
+Inspector fixed; WorldMapView SHA: cf8fa82aa33d45770d6ff67c855103b273a6570c0cb77859615a5ce8afb68600
+=== source identity ===
         applicationId 'com.ghost.worldsense2'
         versionCode 30100
         versionName '3.1.0'
-=== gradle release compile ===
+cf8fa82aa33d45770d6ff67c855103b273a6570c0cb77859615a5ce8afb68600  /home/runner/work/BeamNG-Android-Telemetry/BeamNG-Android-Telemetry/worldsense-v31-src/app/src/main/java/com/ghost/worldsense/WorldMapView.java
+=== javac/gradle release ===
+
+Welcome to Gradle 8.11.1!
+
+Here are the highlights of this release:
+ - Parallel load and store for Configuration Cache
+ - Java compilation errors at the end of the build output
+ - Consolidated report for warnings and deprecations
+
+For more details see https://docs.gradle.org/8.11.1/release-notes.html
+
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.11.1/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preReleaseBuild UP-TO-DATE
+> Task :app:mergeReleaseJniLibFolders
+> Task :app:mergeReleaseNativeLibs NO-SOURCE
+> Task :app:stripReleaseDebugSymbols NO-SOURCE
+> Task :app:extractReleaseNativeSymbolTables NO-SOURCE
+> Task :app:mergeReleaseNativeDebugMetadata NO-SOURCE
+> Task :app:javaPreCompileRelease
+> Task :app:checkReleaseDuplicateClasses
+> Task :app:generateReleaseResValues
+> Task :app:checkReleaseAarMetadata
+> Task :app:mapReleaseSourceSetPaths
+> Task :app:generateReleaseResources
+> Task :app:packageReleaseResources
+> Task :app:mergeReleaseResources
+> Task :app:createReleaseCompatibleScreenManifests
+> Task :app:extractDeepLinksRelease
+> Task :app:parseReleaseLocalResources
+> Task :app:processReleaseMainManifest
+> Task :app:processReleaseManifest
+> Task :app:desugarReleaseFileDependencies
+> Task :app:mergeReleaseStartupProfile
+> Task :app:processReleaseManifestForPackage
+> Task :app:mergeExtDexRelease
+> Task :app:mergeReleaseArtProfile
+> Task :app:mergeReleaseShaders
+> Task :app:compileReleaseShaders NO-SOURCE
+> Task :app:generateReleaseAssets UP-TO-DATE
+> Task :app:mergeReleaseAssets
+> Task :app:compressReleaseAssets
+> Task :app:extractReleaseVersionControlInfo
+> Task :app:extractProguardFiles
+> Task :app:processReleaseJavaRes NO-SOURCE
+> Task :app:processReleaseResources
+> Task :app:collectReleaseDependencies
+> Task :app:mergeReleaseJavaResource
+
+> Task :app:compileReleaseJavaWithJavac
+Note: Some input files use or override a deprecated API.
+Note: Recompile with -Xlint:deprecation for details.
+
+> Task :app:dexBuilderRelease
+> Task :app:mergeReleaseGlobalSynthetics
+> Task :app:mergeDexRelease
+> Task :app:generateReleaseLintVitalReportModel
+> Task :app:compileReleaseArtProfile
+> Task :app:sdkReleaseDependencyData
+> Task :app:writeReleaseAppMetadata
+> Task :app:writeReleaseSigningConfigVersions
+> Task :app:optimizeReleaseResources
+> Task :app:lintVitalAnalyzeRelease
+> Task :app:lintVitalReportRelease
+> Task :app:lintVitalRelease
+> Task :app:packageRelease
+> Task :app:createReleaseApkListingFileRedirect
+> Task :app:assembleRelease
+gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run-1787267319904.json
+[Incubating] Problems report is available at: file:///home/runner/work/BeamNG-Android-Telemetry/BeamNG-Android-Telemetry/worldsense-v31-src/build/reports/problems/problems-report.html
+
+BUILD SUCCESSFUL in 1m
+42 actionable tasks: 42 executed
+package: name='com.ghost.worldsense2' versionCode='30100' versionName='3.1.0' platformBuildVersionName='15' platformBuildVersionCode='35' compileSdkVersion='35' compileSdkVersionCodename='15'
