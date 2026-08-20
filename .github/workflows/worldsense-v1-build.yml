@@ -1,0 +1,111 @@
+name: Build WorldSense v1 APK
+
+on:
+  push:
+    branches:
+      - worldsense-v1-build-20260820
+    paths:
+      - 'worldsense-v1/**'
+      - '.github/workflows/worldsense-v1-build.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.11.1'
+
+      - name: Reconstruct and verify WorldSense v1 source
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf worldsense-v1-src worldsense-v1-out
+          mkdir -p worldsense-v1-src worldsense-v1-out worldsense-v1-signing
+          cat worldsense-v1/src.part* | tr -d '\r\n' | base64 -d > WorldSense-v1.0.0-SOURCE.zip
+          echo '220841a2115250020d300d5e4cd66f2e1b94e793c24bbd46d5212dd29ef1d393  WorldSense-v1.0.0-SOURCE.zip' | sha256sum -c -
+          unzip -q WorldSense-v1.0.0-SOURCE.zip -d worldsense-v1-src
+
+      - name: Ensure stable WorldSense development signing key
+        shell: bash
+        run: |
+          set -euo pipefail
+          KEYSTORE='worldsense-v1-signing/worldsense-v1-dev.jks'
+          if [ ! -f "$KEYSTORE" ]; then
+            keytool -genkeypair \
+              -keystore "$KEYSTORE" \
+              -storepass 'worldsense-dev-2026' \
+              -keypass 'worldsense-dev-2026' \
+              -alias 'worldsense-v1' \
+              -keyalg RSA -keysize 3072 -validity 10000 \
+              -dname 'CN=WorldSense Development,O=WorldSense,C=US'
+          fi
+
+      - name: Compile, align, sign and verify WorldSense v1
+        shell: bash
+        run: |
+          set +e
+          LOG="$GITHUB_WORKSPACE/worldsense-v1-out/build-log.txt"
+          STATUS="$GITHUB_WORKSPACE/worldsense-v1-out/build-status.txt"
+          : > "$LOG"
+          cd "$GITHUB_WORKSPACE/worldsense-v1-src"
+          gradle --no-daemon :app:assembleRelease >> "$LOG" 2>&1
+          code=$?
+          cd "$GITHUB_WORKSPACE"
+
+          if [ "$code" -eq 0 ]; then
+            BT="$(ls -d "$ANDROID_HOME"/build-tools/* 2>/dev/null | sort -V | tail -1)"
+            UNSIGNED='worldsense-v1-src/app/build/outputs/apk/release/app-release-unsigned.apk'
+            ALIGNED='worldsense-v1-out/WorldSense-v1.0.0-aligned.apk'
+            APK='worldsense-v1-out/WorldSense-v1.0.0.apk'
+            KEYSTORE='worldsense-v1-signing/worldsense-v1-dev.jks'
+
+            "$BT/zipalign" -f 4 "$UNSIGNED" "$ALIGNED" >> "$LOG" 2>&1
+            code=$?
+            if [ "$code" -eq 0 ]; then
+              "$BT/apksigner" sign \
+                --ks "$KEYSTORE" \
+                --ks-pass pass:worldsense-dev-2026 \
+                --key-pass pass:worldsense-dev-2026 \
+                --ks-key-alias worldsense-v1 \
+                --out "$APK" "$ALIGNED" >> "$LOG" 2>&1
+              code=$?
+            fi
+            if [ "$code" -eq 0 ]; then
+              "$BT/apksigner" verify --verbose --print-certs "$APK" > worldsense-v1-out/signing-report.txt 2>&1
+              code=$?
+            fi
+            if [ "$code" -eq 0 ]; then
+              rm -f "$ALIGNED"
+              (cd worldsense-v1-out && sha256sum WorldSense-v1.0.0.apk > WorldSense-v1.0.0.apk.sha256)
+              printf 'WorldSense v1.0.0 build outcome: success\nWorkflow source commit: %s\n' "$GITHUB_SHA" > "$STATUS"
+            fi
+          fi
+
+          if [ "$code" -ne 0 ]; then
+            printf 'WorldSense v1.0.0 build outcome: failed\nWorkflow source commit: %s\nExit code: %s\n' "$GITHUB_SHA" "$code" > "$STATUS"
+          fi
+          exit 0
+
+      - name: Commit build result and stable development signing key
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add worldsense-v1-out worldsense-v1-signing/worldsense-v1-dev.jks
+          git commit -m 'Record WorldSense v1.0.0 build result' || true
+          git push origin HEAD:worldsense-v1-build-20260820
