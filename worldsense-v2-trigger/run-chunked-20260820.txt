@@ -1,0 +1,1 @@
+Trigger checksum-verified chunked WorldSense v2.0.0 release build.
