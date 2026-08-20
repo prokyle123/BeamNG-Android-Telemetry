@@ -1,0 +1,145 @@
+name: Build WorldSense v3 APK
+
+on:
+  push:
+    branches:
+      - worldsense-v2-build-20260820
+    paths:
+      - 'worldsense-v3/**'
+      - 'worldsense-v3-trigger/**'
+      - '.github/workflows/worldsense-v3-build.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: worldsense-v3-build
+  cancel-in-progress: true
+
+jobs:
+  build:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.11.1'
+
+      - name: Reconstruct compile sign verify
+        shell: bash
+        run: |
+          set +e
+          OUT="$GITHUB_WORKSPACE/worldsense-v3-out"
+          SRC="$GITHUB_WORKSPACE/worldsense-v3-src"
+          ZIP="$GITHUB_WORKSPACE/WorldSense-v3.0.0-SOURCE.zip"
+          LOG="$OUT/build-log.txt"
+          STATUS="$OUT/build-status.txt"
+          KEYSTORE="$GITHUB_WORKSPACE/worldsense-v1-signing/worldsense-v1-dev.jks"
+          rm -rf "$OUT" "$SRC" "$ZIP"
+          mkdir -p "$OUT" "$SRC"
+          : > "$LOG"
+          code=0
+
+          echo '=== reconstruct source chunks ===' >> "$LOG"
+          cat worldsense-v3/chunks/part* | tr -d '\r\n' | base64 -d > "$ZIP" 2>> "$LOG"
+          code=$?
+
+          if [ "$code" -eq 0 ]; then
+            echo '=== verify frozen source ===' >> "$LOG"
+            echo '4cf295bad70c0de9d68117a75e5a90fd96eb92e34d685310455e4445651f54ee  WorldSense-v3.0.0-SOURCE.zip' | sha256sum -c - >> "$LOG" 2>&1
+            code=$?
+          fi
+
+          if [ "$code" -eq 0 ]; then
+            echo '=== unpack source ===' >> "$LOG"
+            unzip -q "$ZIP" -d "$SRC" >> "$LOG" 2>&1
+            code=$?
+          fi
+
+          if [ "$code" -eq 0 ]; then
+            echo '=== source package/version ===' >> "$LOG"
+            grep -E 'applicationId|versionCode|versionName' "$SRC/app/build.gradle" >> "$LOG" 2>&1
+            echo '=== gradle release compile ===' >> "$LOG"
+            cd "$SRC"
+            gradle --no-daemon :app:assembleRelease >> "$LOG" 2>&1
+            code=$?
+            cd "$GITHUB_WORKSPACE"
+          fi
+
+          if [ "$code" -eq 0 ] && [ ! -f "$KEYSTORE" ]; then
+            echo 'Stable WorldSense signing key missing' >> "$LOG"
+            code=91
+          fi
+
+          if [ "$code" -eq 0 ]; then
+            echo '=== align sign verify ===' >> "$LOG"
+            BT="$(ls -d "$ANDROID_HOME"/build-tools/* 2>/dev/null | sort -V | tail -1)"
+            if [ -z "$BT" ]; then
+              echo 'Android build-tools directory not found' >> "$LOG"
+              code=90
+            else
+              UNSIGNED="$SRC/app/build/outputs/apk/release/app-release-unsigned.apk"
+              ALIGNED="$OUT/WorldSense-v3.0.0-aligned.apk"
+              APK="$OUT/WorldSense-v3.0.0.apk"
+              "$BT/zipalign" -f 4 "$UNSIGNED" "$ALIGNED" >> "$LOG" 2>&1
+              code=$?
+              if [ "$code" -eq 0 ]; then
+                "$BT/apksigner" sign \
+                  --ks "$KEYSTORE" \
+                  --ks-pass pass:worldsense-dev-2026 \
+                  --key-pass pass:worldsense-dev-2026 \
+                  --ks-key-alias worldsense-v1 \
+                  --out "$APK" "$ALIGNED" >> "$LOG" 2>&1
+                code=$?
+              fi
+              if [ "$code" -eq 0 ]; then
+                "$BT/apksigner" verify --verbose --print-certs "$APK" > "$OUT/signing-report.txt" 2>&1
+                code=$?
+              fi
+              if [ "$code" -eq 0 ]; then
+                if [ -x "$BT/aapt" ]; then
+                  "$BT/aapt" dump badging "$APK" > "$OUT/package-report.txt" 2>&1
+                else
+                  "$BT/aapt2" dump badging "$APK" > "$OUT/package-report.txt" 2>&1
+                fi
+                grep -m1 '^package:' "$OUT/package-report.txt" >> "$LOG" 2>&1
+                if ! grep -q "name='com.ghost.worldsense2'" "$OUT/package-report.txt" || ! grep -q "versionCode='30000'" "$OUT/package-report.txt" || ! grep -q "versionName='3.0.0'" "$OUT/package-report.txt"; then
+                  echo 'Package/version verification FAILED' >> "$LOG"
+                  code=92
+                fi
+              fi
+              if [ "$code" -eq 0 ]; then
+                rm -f "$ALIGNED"
+                (cd "$OUT" && sha256sum WorldSense-v3.0.0.apk > WorldSense-v3.0.0.apk.sha256)
+                ls -lh "$APK" >> "$LOG" 2>&1
+              fi
+            fi
+          fi
+
+          if [ "$code" -eq 0 ]; then
+            printf 'WorldSense v3.0.0 build outcome: success\nWorkflow source commit: %s\nFrozen source SHA-256: 4cf295bad70c0de9d68117a75e5a90fd96eb92e34d685310455e4445651f54ee\n' "$GITHUB_SHA" > "$STATUS"
+          else
+            printf 'WorldSense v3.0.0 build outcome: failed\nWorkflow source commit: %s\nExit code: %s\n' "$GITHUB_SHA" "$code" > "$STATUS"
+          fi
+          exit 0
+
+      - name: Commit build result
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add worldsense-v3-out || true
+          git commit -m 'Record WorldSense v3.0.0 build result' || true
+          git pull --rebase origin worldsense-v2-build-20260820 || true
+          git push origin HEAD:worldsense-v2-build-20260820
