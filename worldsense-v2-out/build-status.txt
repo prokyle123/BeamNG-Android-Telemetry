@@ -1,0 +1,2 @@
+WorldSense v2.0.0 build outcome: success
+Workflow source commit: 32f1a1ac50527d6be938595a463e36bd6cbf551b
