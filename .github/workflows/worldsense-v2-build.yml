@@ -40,21 +40,28 @@ jobs:
           set +e
           OUT="$GITHUB_WORKSPACE/worldsense-v2-out"
           SRC="$GITHUB_WORKSPACE/worldsense-v2-src"
+          ZIP="$GITHUB_WORKSPACE/WorldSense-v2.0.0-SOURCE.zip"
           LOG="$OUT/build-log.txt"
           STATUS="$OUT/build-status.txt"
           KEYSTORE="$GITHUB_WORKSPACE/worldsense-v1-signing/worldsense-v1-dev.jks"
-          rm -rf "$OUT" "$SRC"
+          rm -rf "$OUT" "$SRC" "$ZIP"
           mkdir -p "$OUT" "$SRC"
           : > "$LOG"
           code=0
 
-          echo '=== verify source ===' >> "$LOG"
-          echo 'a998e6661acfb23e0a6f5f07846d48bf5e97616a76b40514ed0fcd7c56397bbb  worldsense-v2/WorldSense-v2.0.0-SOURCE.zip' | sha256sum -c - >> "$LOG" 2>&1
+          echo '=== reconstruct source chunks ===' >> "$LOG"
+          cat worldsense-v2/chunks/part* | tr -d '\r\n' | base64 -d > "$ZIP" 2>> "$LOG"
           code=$?
 
           if [ "$code" -eq 0 ]; then
+            echo '=== verify source ===' >> "$LOG"
+            echo 'a998e6661acfb23e0a6f5f07846d48bf5e97616a76b40514ed0fcd7c56397bbb  WorldSense-v2.0.0-SOURCE.zip' | sha256sum -c - >> "$LOG" 2>&1
+            code=$?
+          fi
+
+          if [ "$code" -eq 0 ]; then
             echo '=== unpack source ===' >> "$LOG"
-            unzip -q worldsense-v2/WorldSense-v2.0.0-SOURCE.zip -d "$SRC" >> "$LOG" 2>&1
+            unzip -q "$ZIP" -d "$SRC" >> "$LOG" 2>&1
             code=$?
           fi
 
