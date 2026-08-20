@@ -1,0 +1,1 @@
+Source checksum is verified. Start one final clean WorldSense v2.0.0 release compile with no further source writes.
