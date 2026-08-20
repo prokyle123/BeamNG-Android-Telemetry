@@ -38,6 +38,28 @@ jobs:
           rm -rf worldsense02-src worldsense02-out
           mkdir -p worldsense02-src worldsense02-out
           unzip -q WorldSense-v0.2.0-SOURCE.zip -d worldsense02-src
+          cat > worldsense02-src/app/src/main/java/com/ghost/worldsense/AdaptiveIntelligence.java <<'JAVA'
+          package com.ghost.worldsense;
+          public final class AdaptiveIntelligence {
+              private AdaptiveIntelligence() {}
+              public static String cell(double lat, double lon) {
+                  int y=(int)Math.floor(lat*1000.0); int x=(int)Math.floor(lon*1000.0); return y+":"+x;
+              }
+              public static String motion(float speedMps, float accelDelta) {
+                  if(speedMps<0.6f && accelDelta<0.8f) return "Stationary";
+                  if(speedMps<3.0f) return "Walking";
+                  if(speedMps<8.5f) return "Bike / scooter";
+                  return "Driving";
+              }
+              public static double anomaly(int samples,double avgBle,int ble,double avgWifi,int wifi,double avgCell,int cellDbm) {
+                  if(samples<5) return 0.0;
+                  double a=Math.abs(ble-avgBle)/Math.max(4.0,avgBle*0.45);
+                  double b=Math.abs(wifi-avgWifi)/Math.max(3.0,avgWifi*0.45);
+                  double c=(cellDbm==-999||avgCell<-200)?0:Math.abs(cellDbm-avgCell)/12.0;
+                  return Math.min(100.0,(a+b+c)*28.0);
+              }
+          }
+          JAVA
 
       - name: Compile WorldSense v0.2
         id: compile
