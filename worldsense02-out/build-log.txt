@@ -32,7 +32,6 @@ Daemon will be stopped at the end of the build
 > Task :app:compressDebugAssets
 > Task :app:desugarDebugFileDependencies
 > Task :app:processDebugJavaRes NO-SOURCE
-> Task :app:mergeDebugJniLibFolders
 > Task :app:processDebugManifestForPackage
 > Task :app:checkDebugDuplicateClasses
 > Task :app:mergeDebugJavaResource
@@ -40,76 +39,27 @@ Daemon will be stopped at the end of the build
 > Task :app:mergeExtDexDebug
 
 > Task :app:compileDebugJavaWithJavac
-/home/runner/work/BeamNG-Android-Telemetry/BeamNG-Android-Telemetry/worldsense02-src/app/src/main/java/com/ghost/worldsense/WorldDb.java:60: error: cannot find symbol
-        String cell = AdaptiveIntelligence.cell(lat, lon);
-                      ^
-  symbol:   variable AdaptiveIntelligence
-  location: class WorldDb
-/home/runner/work/BeamNG-Android-Telemetry/BeamNG-Android-Telemetry/worldsense02-src/app/src/main/java/com/ghost/worldsense/WorldDb.java:66: error: cannot find symbol
-        double anomaly = AdaptiveIntelligence.anomaly(n, ab, ble, aw, wifi, ac, cellDbm);
-                         ^
-  symbol:   variable AdaptiveIntelligence
-  location: class WorldDb
-/home/runner/work/BeamNG-Android-Telemetry/BeamNG-Android-Telemetry/worldsense02-src/app/src/main/java/com/ghost/worldsense/SensorCollectorService.java:107: error: cannot find symbol
-            String cell=(lastLat==0)?"unknown":AdaptiveIntelligence.cell(lastLat,lastLon);
-                                               ^
-  symbol:   variable AdaptiveIntelligence
-  location: class SensorCollectorService
-/home/runner/work/BeamNG-Android-Telemetry/BeamNG-Android-Telemetry/worldsense02-src/app/src/main/java/com/ghost/worldsense/SensorCollectorService.java:120: error: cannot find symbol
-            if(rs!=null){String cell=(lastLat==0)?"unknown":AdaptiveIntelligence.cell(lastLat,lastLon);long now=System.currentTimeMillis();
-                                                            ^
-  symbol:   variable AdaptiveIntelligence
-  location: class SensorCollectorService
-/home/runner/work/BeamNG-Android-Telemetry/BeamNG-Android-Telemetry/worldsense02-src/app/src/main/java/com/ghost/worldsense/SensorCollectorService.java:166: error: cannot find symbol
-        int samples=placeSamples(AdaptiveIntelligence.cell(lastLat,lastLon));
-                                 ^
-  symbol:   variable AdaptiveIntelligence
-  location: class SensorCollectorService
 Note: Some input files use or override a deprecated API.
 Note: Recompile with -Xlint:deprecation for details.
-5 errors
 
-> Task :app:compileDebugJavaWithJavac FAILED
-gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/compile-1787246228964.json
+> Task :app:dexBuilderDebug
+> Task :app:mergeDebugGlobalSynthetics
+> Task :app:mergeDebugJniLibFolders
+> Task :app:mergeLibDexDebug
+> Task :app:mergeProjectDexDebug
+> Task :app:mergeDebugNativeLibs
+> Task :app:validateSigningDebug
+> Task :app:writeDebugAppMetadata
+> Task :app:writeDebugSigningConfigVersions
+
+> Task :app:stripDebugDebugSymbols
+Unable to strip the following libraries, packaging them as they are: libmaplibre.so.
+
+> Task :app:packageDebug
+> Task :app:createDebugApkListingFileRedirect
+> Task :app:assembleDebug
+gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/compile-1787246367681.json
 [Incubating] Problems report is available at: file:///home/runner/work/BeamNG-Android-Telemetry/BeamNG-Android-Telemetry/worldsense02-src/build/reports/problems/problems-report.html
 
-FAILURE: Build failed with an exception.
-
-* What went wrong:
-Execution failed for task ':app:compileDebugJavaWithJavac'.
-> Compilation failed; see the compiler output below.
-  Note: Recompile with -Xlint:deprecation for details.
-  Note: Some input files use or override a deprecated API.
-  /home/runner/work/BeamNG-Android-Telemetry/BeamNG-Android-Telemetry/worldsense02-src/app/src/main/java/com/ghost/worldsense/WorldDb.java:60: error: cannot find symbol
-          String cell = AdaptiveIntelligence.cell(lat, lon);
-                        ^
-    symbol:   variable AdaptiveIntelligence
-    location: class WorldDb
-  /home/runner/work/BeamNG-Android-Telemetry/BeamNG-Android-Telemetry/worldsense02-src/app/src/main/java/com/ghost/worldsense/WorldDb.java:66: error: cannot find symbol
-          double anomaly = AdaptiveIntelligence.anomaly(n, ab, ble, aw, wifi, ac, cellDbm);
-                           ^
-    symbol:   variable AdaptiveIntelligence
-    location: class WorldDb
-  /home/runner/work/BeamNG-Android-Telemetry/BeamNG-Android-Telemetry/worldsense02-src/app/src/main/java/com/ghost/worldsense/SensorCollectorService.java:107: error: cannot find symbol
-              String cell=(lastLat==0)?"unknown":AdaptiveIntelligence.cell(lastLat,lastLon);
-                                                 ^
-    symbol:   variable AdaptiveIntelligence
-    location: class SensorCollectorService
-  /home/runner/work/BeamNG-Android-Telemetry/BeamNG-Android-Telemetry/worldsense02-src/app/src/main/java/com/ghost/worldsense/SensorCollectorService.java:120: error: cannot find symbol
-              if(rs!=null){String cell=(lastLat==0)?"unknown":AdaptiveIntelligence.cell(lastLat,lastLon);long now=System.currentTimeMillis();
-                                                              ^
-    symbol:   variable AdaptiveIntelligence
-    location: class SensorCollectorService
-  /home/runner/work/BeamNG-Android-Telemetry/BeamNG-Android-Telemetry/worldsense02-src/app/src/main/java/com/ghost/worldsense/SensorCollectorService.java:166: error: cannot find symbol
-          int samples=placeSamples(AdaptiveIntelligence.cell(lastLat,lastLon));
-                                   ^
-    symbol:   variable AdaptiveIntelligence
-    location: class SensorCollectorService
-  5 errors
-
-* Try:
-> Check your code and dependencies to fix the compilation error(s)
-> Run with --scan to get full insights.
-
-BUILD FAILED in 1m 15s
-23 actionable tasks: 23 executed
+BUILD SUCCESSFUL in 1m 16s
+34 actionable tasks: 34 executed
