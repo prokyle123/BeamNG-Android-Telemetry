@@ -1,10 +1,20 @@
 === reconstruct verified v3 base ===
 WorldSense-v3.0.0-SOURCE.zip: OK
-=== reconstruct 3.1 delta ===
-
-gzip: stdin: invalid compressed data--crc error
-
-gzip: stdin: invalid compressed data--length error
-=== apply 3.1 delta ===
-=== verify patched source ===
+=== reconstruct original verified 3.1 delta from history ===
+worldsense-v31-base.patch: OK
+patching file app/build.gradle
+patching file app/src/main/java/com/ghost/worldsense/MainActivity.java
+patching file app/src/main/java/com/ghost/worldsense/WorldDb.java
+patching file app/src/main/java/com/ghost/worldsense/WorldMapView.java
+=== apply inspector string compile fix ===
+Inspector string fix applied
+=== verify final 3.1 source ===
+app/build.gradle: OK
+app/src/main/java/com/ghost/worldsense/MainActivity.java: OK
+app/src/main/java/com/ghost/worldsense/WorldMapView.java: FAILED
+sha256sum: WARNING: 1 computed checksum did NOT match
+app/src/main/java/com/ghost/worldsense/WorldDb.java: OK
+        applicationId 'com.ghost.worldsense2'
+        versionCode 30100
+        versionName '3.1.0'
 === gradle release compile ===
