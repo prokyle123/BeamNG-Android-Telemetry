@@ -1,8 +1,8 @@
 === reconstruct source ===
 WorldSense-v1.0.0-SOURCE.zip: OK
+=== osmdroid API compatibility patch ===
+48:        org.osmdroid.config.IConfigurationProvider cfg=Configuration.getInstance();
 === stable signing key ===
-Generating 3,072 bit RSA key pair and self-signed certificate (SHA256withRSA) with a validity of 10,000 days
-	for: CN=WorldSense Development, O=WorldSense, C=US
 === gradle release compile ===
 
 Welcome to Gradle 8.11.1!
@@ -25,8 +25,8 @@ Daemon will be stopped at the end of the build
 > Task :app:mergeReleaseNativeDebugMetadata NO-SOURCE
 > Task :app:checkReleaseDuplicateClasses
 > Task :app:javaPreCompileRelease
-> Task :app:checkReleaseAarMetadata
 > Task :app:generateReleaseResValues
+> Task :app:checkReleaseAarMetadata
 > Task :app:mapReleaseSourceSetPaths
 > Task :app:generateReleaseResources
 > Task :app:packageReleaseResources
@@ -38,77 +38,43 @@ Daemon will be stopped at the end of the build
 > Task :app:processReleaseManifest
 > Task :app:desugarReleaseFileDependencies
 > Task :app:mergeReleaseStartupProfile
-> Task :app:processReleaseManifestForPackage
-> Task :app:mergeExtDexRelease
 > Task :app:mergeReleaseArtProfile
 > Task :app:mergeReleaseShaders
 > Task :app:compileReleaseShaders NO-SOURCE
 > Task :app:generateReleaseAssets UP-TO-DATE
 > Task :app:mergeReleaseAssets
+> Task :app:processReleaseManifestForPackage
+> Task :app:mergeExtDexRelease
 > Task :app:compressReleaseAssets
 > Task :app:extractReleaseVersionControlInfo
 > Task :app:extractProguardFiles
 > Task :app:processReleaseJavaRes NO-SOURCE
 > Task :app:processReleaseResources
+> Task :app:collectReleaseDependencies
 > Task :app:mergeReleaseJavaResource
 
 > Task :app:compileReleaseJavaWithJavac
-/home/runner/work/BeamNG-Android-Telemetry/BeamNG-Android-Telemetry/worldsense-v1-src/app/src/main/java/com/ghost/worldsense/WorldMapView.java:48: error: incompatible types: IConfigurationProvider cannot be converted to Configuration
-        Configuration cfg=Configuration.getInstance();
-                                                   ^
-/home/runner/work/BeamNG-Android-Telemetry/BeamNG-Android-Telemetry/worldsense-v1-src/app/src/main/java/com/ghost/worldsense/WorldMapView.java:49: error: cannot find symbol
-        cfg.setUserAgentValue(context.getPackageName()+"/1.0");
-           ^
-  symbol:   method setUserAgentValue(String)
-  location: variable cfg of type Configuration
-/home/runner/work/BeamNG-Android-Telemetry/BeamNG-Android-Telemetry/worldsense-v1-src/app/src/main/java/com/ghost/worldsense/WorldMapView.java:53: error: cannot find symbol
-        cfg.setOsmdroidBasePath(base);
-           ^
-  symbol:   method setOsmdroidBasePath(File)
-  location: variable cfg of type Configuration
-/home/runner/work/BeamNG-Android-Telemetry/BeamNG-Android-Telemetry/worldsense-v1-src/app/src/main/java/com/ghost/worldsense/WorldMapView.java:54: error: cannot find symbol
-        cfg.setOsmdroidTileCache(tiles);
-           ^
-  symbol:   method setOsmdroidTileCache(File)
-  location: variable cfg of type Configuration
 Note: Some input files use or override a deprecated API.
 Note: Recompile with -Xlint:deprecation for details.
-4 errors
 
-> Task :app:compileReleaseJavaWithJavac FAILED
-gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run-1787252233122.json
+> Task :app:dexBuilderRelease
+> Task :app:mergeReleaseGlobalSynthetics
+> Task :app:mergeDexRelease
+> Task :app:generateReleaseLintVitalReportModel
+> Task :app:compileReleaseArtProfile
+> Task :app:sdkReleaseDependencyData
+> Task :app:writeReleaseAppMetadata
+> Task :app:writeReleaseSigningConfigVersions
+> Task :app:optimizeReleaseResources
+> Task :app:lintVitalAnalyzeRelease
+> Task :app:lintVitalReportRelease
+> Task :app:lintVitalRelease
+> Task :app:packageRelease
+> Task :app:createReleaseApkListingFileRedirect
+> Task :app:assembleRelease
+gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run-1787252361931.json
 [Incubating] Problems report is available at: file:///home/runner/work/BeamNG-Android-Telemetry/BeamNG-Android-Telemetry/worldsense-v1-src/build/reports/problems/problems-report.html
 
-FAILURE: Build failed with an exception.
-
-* What went wrong:
-Execution failed for task ':app:compileReleaseJavaWithJavac'.
-> Compilation failed; see the compiler output below.
-  /home/runner/work/BeamNG-Android-Telemetry/BeamNG-Android-Telemetry/worldsense-v1-src/app/src/main/java/com/ghost/worldsense/WorldMapView.java:48: error: incompatible types: IConfigurationProvider cannot be converted to Configuration
-          Configuration cfg=Configuration.getInstance();
-                                                     ^
-  Note: Recompile with -Xlint:deprecation for details.
-  Note: Some input files use or override a deprecated API.
-  /home/runner/work/BeamNG-Android-Telemetry/BeamNG-Android-Telemetry/worldsense-v1-src/app/src/main/java/com/ghost/worldsense/WorldMapView.java:49: error: cannot find symbol
-          cfg.setUserAgentValue(context.getPackageName()+"/1.0");
-             ^
-    symbol:   method setUserAgentValue(String)
-    location: variable cfg of type Configuration
-  /home/runner/work/BeamNG-Android-Telemetry/BeamNG-Android-Telemetry/worldsense-v1-src/app/src/main/java/com/ghost/worldsense/WorldMapView.java:53: error: cannot find symbol
-          cfg.setOsmdroidBasePath(base);
-             ^
-    symbol:   method setOsmdroidBasePath(File)
-    location: variable cfg of type Configuration
-  /home/runner/work/BeamNG-Android-Telemetry/BeamNG-Android-Telemetry/worldsense-v1-src/app/src/main/java/com/ghost/worldsense/WorldMapView.java:54: error: cannot find symbol
-          cfg.setOsmdroidTileCache(tiles);
-             ^
-    symbol:   method setOsmdroidTileCache(File)
-    location: variable cfg of type Configuration
-  4 errors
-
-* Try:
-> Check your code and dependencies to fix the compilation error(s)
-> Run with --scan to get full insights.
-
-BUILD FAILED in 45s
-27 actionable tasks: 27 executed
+BUILD SUCCESSFUL in 1m 1s
+42 actionable tasks: 42 executed
+=== align + sign ===
