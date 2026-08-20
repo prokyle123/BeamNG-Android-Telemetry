@@ -1,0 +1,3 @@
+=== reconstruct source ===
+WorldSense-v1.0.0-SOURCE.zip: FAILED
+sha256sum: WARNING: 1 computed checksum did NOT match
