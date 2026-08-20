@@ -68,7 +68,7 @@ jobs:
             code=$?
           fi
           if [ "$code" -eq 0 ]; then
-            echo 'c9b2a24456cb923b1b6a7c08ba5c6198c6e5ccd8744178ba96e88b1505c9d88e  worldsense-v31.patch' | sha256sum -c - >> "$LOG" 2>&1
+            echo '31a57f1c6ae3409b8e896ddd9631a1caba7f210eb4352723811159872da68025  worldsense-v31.patch' | sha256sum -c - >> "$LOG" 2>&1
             code=$?
           fi
 
@@ -84,7 +84,7 @@ jobs:
             sha256sum app/build.gradle app/src/main/java/com/ghost/worldsense/MainActivity.java app/src/main/java/com/ghost/worldsense/WorldMapView.java app/src/main/java/com/ghost/worldsense/WorldDb.java >> "$LOG" 2>&1
             echo 'c5e767b0d782288ed2bcebf4b52d8fe43044b3889ee3f1cfd178a4ce336433de  app/build.gradle' | sha256sum -c - >> "$LOG" 2>&1 || code=$?
             echo '40ce4149baa06040b0206bf1364c7e254a9fc91d246cf01b937f07c3a8ddf13b  app/src/main/java/com/ghost/worldsense/MainActivity.java' | sha256sum -c - >> "$LOG" 2>&1 || code=$?
-            echo '1e5c9350534888f9bcf5b0f7743f7afa61d1f1f5d2abfd63cb68e4241cd8d427  app/src/main/java/com/ghost/worldsense/WorldMapView.java' | sha256sum -c - >> "$LOG" 2>&1 || code=$?
+            echo '22a6510f2019cad3b840d93ed6b78df013961175843552c836ff52ec8b5f2e57  app/src/main/java/com/ghost/worldsense/WorldMapView.java' | sha256sum -c - >> "$LOG" 2>&1 || code=$?
             echo '562d7aa2fc58f4b2c6737e02c3d39eeb031875583181e6137380914bd8c8b5f1  app/src/main/java/com/ghost/worldsense/WorldDb.java' | sha256sum -c - >> "$LOG" 2>&1 || code=$?
             grep -E 'applicationId|versionCode|versionName' app/build.gradle >> "$LOG" 2>&1
             cd "$GITHUB_WORKSPACE"
@@ -149,7 +149,7 @@ jobs:
           fi
 
           if [ "$code" -eq 0 ]; then
-            printf 'WorldSense v3.1.0 build outcome: success\nWorkflow source commit: %s\nPatch SHA-256: c9b2a24456cb923b1b6a7c08ba5c6198c6e5ccd8744178ba96e88b1505c9d88e\n' "$GITHUB_SHA" > "$STATUS"
+            printf 'WorldSense v3.1.0 build outcome: success\nWorkflow source commit: %s\nPatch SHA-256: 31a57f1c6ae3409b8e896ddd9631a1caba7f210eb4352723811159872da68025\n' "$GITHUB_SHA" > "$STATUS"
           else
             printf 'WorldSense v3.1.0 build outcome: failed\nWorkflow source commit: %s\nExit code: %s\n' "$GITHUB_SHA" "$code" > "$STATUS"
           fi
