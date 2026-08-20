@@ -1,0 +1,1 @@
+Trigger WorldSense v2.0.0 release build after resumed session.
