@@ -1,3 +1,3 @@
 WorldSense v2.0.0 build outcome: failed
-Workflow source commit: d3c83a8df4beefb2fd39c44fb8b4c0b540fa2666
+Workflow source commit: 4bca4119820d62947195cf537e9758124550b46d
 Exit code: 1
